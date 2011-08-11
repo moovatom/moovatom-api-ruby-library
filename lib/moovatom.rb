@@ -1,5 +1,16 @@
 require "moovatom/version"
 
 module MoovAtom
-  # Your code goes here...
-end
+  
+  class MoovEngine
+    
+    def initialize(args={})
+      
+    end
+    
+    
+    
+    
+  end #-- end MoovEngine class
+  
+end #-- end MoovAtom module
