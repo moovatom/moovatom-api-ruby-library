@@ -70,8 +70,8 @@ module MoovAtom
     #- send an xml request
     def send_xml_request(xml)
 
-      Net::HTTP.start(@@req_url) do |http|
-        http.post(@@req_path, "xml=#{URI.escape(xml)}")
+      Net::HTTP.start(MoovAtom::REQ_URL) do |http|
+        http.post(MoovAtom::REQ_PATH, "xml=#{URI.escape(xml)}")
       end
 
     end #-- end send_xml_request method
