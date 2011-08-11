@@ -21,6 +21,6 @@ Gem::Specification.new do |s|
   s.require_paths     = ["lib"]
   
   #-- dependency info
-  spec.add_dependency('builder')
+  s.add_dependency('builder')
   
 end
