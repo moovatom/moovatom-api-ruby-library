@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   
   #-- gem info
   s.name              = "moovatom"
-  s.version           = Moovatom::VERSION
+  s.version           = MoovAtom::VERSION
   s.summary           = %q{Access MoovAtom API}
   s.description       = %q{This gem defines methods for controlling your videos on MoovAtom using the MoovEngine API.}
   s.rubyforge_project = "moovatom"

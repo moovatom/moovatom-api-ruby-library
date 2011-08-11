@@ -1,5 +1,5 @@
 require "moovatom/version"
 
-module Moovatom
+module MoovAtom
   # Your code goes here...
 end
