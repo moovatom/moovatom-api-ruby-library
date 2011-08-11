@@ -1,5 +1,5 @@
 #- required gems/libraries
-%w[./moovatom/version net/http builder uri].each { |item| require item }
+%w[net/http builder uri].each { |item| require item }
 
 module MoovAtom
   
