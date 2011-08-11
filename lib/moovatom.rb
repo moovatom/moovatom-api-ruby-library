@@ -1,4 +1,4 @@
-require "moovatom/version"
+require "./moovatom/version"
 
 module MoovAtom
   
@@ -12,6 +12,7 @@ module MoovAtom
     attr_reader :xml_response
     attr_accessor :guid, :username, :userkey, :action, :content_type, :title, :blurb, :sourcefile, :callbackurl
     
+    #- moovengine class initializer
     def initialize(args={})
       @guid         = args[:guid]
       @username     = args[:username]
@@ -24,7 +25,21 @@ module MoovAtom
       @callbackurl  = args[:callbackurl]
     end
     
+    def details
+      
+    end #- end details method
     
+    def status
+      
+    end #- end status method
+    
+    def encode
+      
+    end #- end encode method
+    
+    def cancel
+      
+    end #- end cancel method
     
     
   end #-- end MoovEngine class
