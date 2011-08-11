@@ -8,6 +8,10 @@ module MoovAtom
   
   class MoovEngine
     
+    #-- class setters and setters
+    attr_reader :xml_response
+    attr_accessor :guid, :username, :userkey, :action, :content_type, :title, :blurb, :sourcefile, :callbackurl
+    
     def initialize(args={})
       
     end
