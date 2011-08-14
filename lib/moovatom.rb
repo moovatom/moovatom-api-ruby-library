@@ -4,8 +4,8 @@
 module MoovAtom
   
   #-- module constants
-  REQ_URL  = 'moovatom.com'
-  REQ_PATH = '/api/api_request'
+  API_URL  = 'moovatom.com'
+  API_PATH = '/api/api_request'
   
   class MoovEngine
     
@@ -70,8 +70,8 @@ module MoovAtom
     #- send an xml request
     def send_xml_request(xml)
 
-      Net::HTTP.start(MoovAtom::REQ_URL) do |http|
-        http.post(MoovAtom::REQ_PATH, "xml=#{URI.escape(xml)}")
+      Net::HTTP.start(MoovAtom::API_URL) do |http|
+        http.post(MoovAtom::API_PATH, "xml=#{URI.escape(xml)}")
       end
 
     end #-- end send_xml_request method
