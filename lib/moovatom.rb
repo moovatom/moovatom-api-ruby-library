@@ -29,11 +29,13 @@ module MoovAtom
     def details(guid)
       @guid = guid
       @action = 'details'
+      @xml_response = send_xml_request(build_xml_request)
     end #- end details method
     
     def status(guid)
       @guid = guid
       @action = 'status'
+      @xml_response = send_xml_request(build_xml_request)
     end #- end status method
     
     def encode
@@ -43,6 +45,7 @@ module MoovAtom
     def cancel(guid)
       @guid = guid
       @action = 'cancel'
+      @xml_response = send_xml_request(build_xml_request)
     end #- end cancel method
     
     #- start of private methods
