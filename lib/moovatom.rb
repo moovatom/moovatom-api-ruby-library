@@ -20,7 +20,7 @@ module MoovAtom
     
     #- class setters and getters
     attr_reader :xml_response
-    attr_accessor :guid, :username, :userkey, :action, :content_type, :title, :blurb, :sourcefile, :callbackurl
+    attr_accessor :guid, :username, :userkey, :content_type, :title, :blurb, :sourcefile, :callbackurl
     
     # The initializer creates a set of instance variables to hold all the specifics about
     # the video you're accessing.
@@ -30,7 +30,6 @@ module MoovAtom
       @guid         = args[:guid]
       @username     = args[:username]
       @userkey      = args[:userkey]
-      @action       = args[:action] || 'details'
       @content_type = args[:content_type] || "video"
       @title        = args[:title]
       @blurb        = args[:blurb]
@@ -61,7 +60,8 @@ module MoovAtom
     end #- end status method
     
     def encode
-      
+      @action = 'encode'
+      @xml_response = send_xml_request(build_xml_request)
     end #- end encode method
     
     # Use this method to cancel the encoding of a video
