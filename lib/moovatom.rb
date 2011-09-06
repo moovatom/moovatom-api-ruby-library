@@ -6,7 +6,8 @@
 # See README file for installation details and general usage information.
 #
 # Author:: Dominic Giglio <mailto:humanshell@gmail.com>
-# Copyright:: Copyright (c) 2011 MoovAtom - All Rights Reserved
+# Copyright:: Copyright (c) 2011 Dominic Giglio - All Rights Reserved
+# License:: MIT
 
 #-- required gems/libraries
 %w[net/https builder uri].each { |item| require item }
