@@ -8,18 +8,18 @@
 # Author:: Dominic Giglio <mailto:humanshell@gmail.com>
 # Copyright:: Copyright (c) 2011 MoovAtom - All Rights Reserved
 
-#- required gems/libraries
+#-- required gems/libraries
 %w[net/https builder uri].each { |item| require item }
 
-#- wrap the whole library in a module to enforce namespace
+#-- wrap the whole library in a module to enforce namespace
 module MoovAtom
   
-  #- MoovAtom module constants
+  #-- MoovAtom module constants
   API_URL  = 'https://moovatom.com/api/api_request'
   
   class MoovEngine
     
-    #- class setters and getters
+    #-- class setters and getters
     attr_reader :xml_response
     attr_accessor :guid, :username, :userkey, :content_type, :title, :blurb, :sourcefile, :callbackurl
     
@@ -48,7 +48,7 @@ module MoovAtom
       @blurb        = args[:blurb]
       @sourcefile   = args[:sourcefile]
       @callbackurl  = args[:callbackurl]
-    end #- end initialize method
+    end #-- end initialize method
     
     # Use this method to get the details about a video that's finished encoding.
     # This method requires @username, @userkey and @guid to be set.
@@ -61,7 +61,7 @@ module MoovAtom
       @guid = guid
       @action = 'details'
       @xml_response = send_xml_request(build_xml_request)
-    end #- end details method
+    end #-- end details method
     
     # Use this method to get the status of a video that is currently being encoded
     # This method requires @username, @userkey and @guid to be set.
@@ -74,7 +74,7 @@ module MoovAtom
       @guid = guid
       @action = 'status'
       @xml_response = send_xml_request(build_xml_request)
-    end #- end status method
+    end #-- end status method
     
     # Use this method to start encoding a new video.
     # This method requires the following variables be set:
@@ -93,7 +93,7 @@ module MoovAtom
     def encode
       @action = 'encode'
       @xml_response = send_xml_request(build_xml_request)
-    end #- end encode method
+    end #-- end encode method
     
     # Use this method to cancel the encoding of a video
     # This method requires @username, @userkey and @guid to be set.
@@ -104,9 +104,9 @@ module MoovAtom
       @guid = guid
       @action = 'cancel'
       @xml_response = send_xml_request(build_xml_request)
-    end #- end cancel method
+    end #-- end cancel method
     
-    #- start of private methods
+    #-- start of private methods
     private
     
     # Creates the XML object that is post'd to the MoovAtom servers
@@ -124,7 +124,7 @@ module MoovAtom
         r.sourcefile(@sourcefile)
         r.callbackurl(@callbackurl)
       end
-    end #- end build_xml_request method
+    end #-- end build_xml_request method
     
     # Sends the XML object to the MoovAtom servers
     def send_xml_request(xml)
@@ -133,8 +133,8 @@ module MoovAtom
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       response = http.post(uri.request_uri, "xml=#{URI.escape(xml)}")
-    end #- end send_xml_request method
+    end #-- end send_xml_request method
     
-  end #- end MoovEngine class
+  end #-- end MoovEngine class
   
-end #- end MoovAtom module
+end #-- end MoovAtom module
