@@ -27,7 +27,7 @@ module MoovAtom
     # the video you're accessing. You can define these variables when instantiating a new
     # MoovEngine object or after a blank object has been created. All variables with the
     # exception of @xml_response and @action are writable. @xml_response is only readable
-    # because it contains the respnse from MoovAtom's servers. @action get set in each of
+    # because it contains the respnse from MoovAtom's servers. @action gets set in each of
     # the methods below to correctly correspond with the associated request.
     #
     # Usage:
@@ -63,7 +63,7 @@ module MoovAtom
       @xml_response = send_xml_request(build_xml_request)
     end #-- end details method
     
-    # Use this method to get the status of a video that is currently being encoded
+    # Use this method to get the status of a video that is currently being encoded.
     # This method requires @username, @userkey and @guid to be set.
     #
     # @TODO add the ability to yield to a block
@@ -95,7 +95,7 @@ module MoovAtom
       @xml_response = send_xml_request(build_xml_request)
     end #-- end encode method
     
-    # Use this method to cancel the encoding of a video
+    # Use this method to cancel the encoding of a video.
     # This method requires @username, @userkey and @guid to be set.
     #
     # Usage:
