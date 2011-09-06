@@ -7,14 +7,13 @@
 # Author:: Dominic Giglio <mailto:humanshell@gmail.com>
 
 #- required gems/libraries
-%w[net/http builder uri].each { |item| require item }
+%w[net/https builder uri].each { |item| require item }
 
 #- wrap the whole library in a module to enforce namespace
 module MoovAtom
   
-  #-- MoovAtom module constants
-  API_URL  = 'moovatom.com'
-  API_PATH = '/api/api_request'
+  #- MoovAtom module constants
+  API_URL  = 'https://moovatom.com/api/api_request'
   
   class MoovEngine
     
@@ -99,9 +98,11 @@ module MoovAtom
     #- send an xml request
     # Sends the XML object to the MoovAtom servers
     def send_xml_request(xml)
-      Net::HTTP.start(MoovAtom::API_URL) do |http|
-        http.post(MoovAtom::API_PATH, "xml=#{URI.escape(xml)}")
-      end
+      uri = URI.parse(MoovAtom::API_URL)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      response = http.post(uri.request_uri, "xml=#{URI.escape(xml)}")
     end #- end send_xml_request method
     
   end #- end MoovEngine class
