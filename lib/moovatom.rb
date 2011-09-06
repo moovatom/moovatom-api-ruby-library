@@ -1,4 +1,4 @@
-# = MoovAtom API gem
+# :title: MoovAtom API Documentation
 # The MoovEngine API provides the RESTful interface for encoding, canceling and querying,
 # your videos on the MoovAtom servers. This library defines the methods and functionality
 # necessary for your app to communicate with that interface.
