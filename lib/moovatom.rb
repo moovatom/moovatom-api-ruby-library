@@ -10,7 +10,7 @@
 # License:: MIT
 
 #-- required gems/libraries
-%w[net/https builder uri].each { |item| require item }
+%w[net/https rexml/document builder uri].each { |item| require item }
 
 #-- wrap the whole library in a module to enforce namespace
 module MoovAtom
@@ -94,6 +94,11 @@ module MoovAtom
     def encode
       @action = 'encode'
       @xml_response = send_xml_request(build_xml_request)
+      
+      if @xml_response.code == "200"
+        xml_doc = REXML::Document.new @xml_response.body
+        @guid = xml_doc.root.elements["uuid"].text
+      end
     end #-- end encode method
     
     # Use this method to cancel the encoding of a video.
