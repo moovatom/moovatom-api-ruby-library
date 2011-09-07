@@ -22,7 +22,7 @@ This library is wrapped in a module named MoovAtom. Inside the module there is a
 Of course you can also simplify that code by using:
 
 <code>
-  require 'moovatom'
+  require 'moovatom'  
   include MoovAtom  
   new_conn = MoovEngine.new
 </code>
@@ -43,7 +43,7 @@ There is a single module constant named `API_URL` that defines the URL to which 
 These variables are used to communicate details about your account and your videos to MoovAtom's servers. You can define and pass them to the initialize method or set them after an object has been created with the usual accessor 'dot' notation:
 
 <code>
-  require 'moovatom'
+  require 'moovatom'  
   include MoovAtom  
   args = { :title => "My Super Video", :sourcefile => "http://example.com/supervideo.mp4", etc... }
   new_conn = MoovEngine.new args
@@ -52,7 +52,7 @@ These variables are used to communicate details about your account and your vide
 Or...
 
 <code>
-  require 'moovatom'
+  require 'moovatom'  
   include MoovAtom  
   new_conn = MoovEngine.new  
   new_conn.title = "My Super Video"
