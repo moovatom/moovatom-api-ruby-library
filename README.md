@@ -29,6 +29,12 @@ Of course you can also simplify that code by using:
 
 This code allows you to create a new instance without needing to enter the module's scope each time.
 
+Installing the gem is as simple as `gem install moovatom`. However, this library is in an extreme alpha state so it may be best to access the gem via this GitHub repo. You can include a gem from its GitHub by adding the following to your app's Gemfile:
+
+<code>
+  gem 'moovatom', :git => "git://github.com/humanshell/moovatom.git"
+</code>
+
 There is a single module constant named `API_URL` that defines the URL to which the XML requests must be POST'd to. There are eight writable instance variables and one readable variable. The single readable variable is `@xml_response`. It's function is to hold the last response received from MoovAtom's servers. The other variables are as follows:
 
 1. `@guid`
