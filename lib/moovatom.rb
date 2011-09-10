@@ -54,12 +54,15 @@ module MoovAtom
     # Use this method to get the details about a video that's finished encoding.
     # This method requires @username, @userkey and @guid to be set.
     #
+    # If @guid has not yet been set then you can pass it in the hash argument.
+    #
     # @TODO add the ability to yield to a block
     #
     # Usage:
+    # * moov_engine.details
     # * moov_engine.details 'GUID_OF_VIDEO'
-    def details(guid)
-      @guid = guid
+    def details(guid = "")
+      @guid = guid if @guid.nil?
       @action = 'details'
       @xml_response = send_xml_request(build_xml_request)
     end #-- end details method
@@ -67,12 +70,15 @@ module MoovAtom
     # Use this method to get the status of a video that is currently being encoded.
     # This method requires @username, @userkey and @guid to be set.
     #
+    # If @guid has not yet been set then you can pass it in the hash argument.
+    #
     # @TODO add the ability to yield to a block
     #
     # Usage:
+    # * moov_engine.status
     # * moov_engine.status 'GUID_OF_VIDEO'
-    def status(guid)
-      @guid = guid
+    def status(guid = "")
+      @guid = guid if @guid.nil?
       @action = 'status'
       @xml_response = send_xml_request(build_xml_request)
     end #-- end status method
@@ -104,10 +110,13 @@ module MoovAtom
     # Use this method to cancel the encoding of a video.
     # This method requires @username, @userkey and @guid to be set.
     #
+    # If @guid has not yet been set then you can pass it in the hash argument.
+    #
     # Usage:
+    # * moov_engine.cancel
     # * moov_engine.cancel 'GUID_OF_VIDEO'
-    def cancel(guid)
-      @guid = guid
+    def cancel(guid = "")
+      @guid = guid if @guid.nil?
       @action = 'cancel'
       @xml_response = send_xml_request(build_xml_request)
     end #-- end cancel method
