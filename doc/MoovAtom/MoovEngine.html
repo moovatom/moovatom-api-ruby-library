@@ -391,7 +391,7 @@ href="MoovEngine.html#method-c-new">MoovAtom::MoovEngine.new(args)</a></p>
           
           <div class="method-heading">
             <span class="method-name">cancel</span><span
-              class="method-args">(guid)</span>
+              class="method-args">(guid = "")</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
           
@@ -401,8 +401,12 @@ href="MoovEngine.html#method-c-new">MoovAtom::MoovEngine.new(args)</a></p>
             <p>Use this method to cancel the encoding of a video. This method requires
 @username, @userkey and @guid to be set.</p>
 
+<p>If @guid has not yet been set then you can pass it in the hash argument.</p>
+
 <p>Usage:</p>
 <ul><li>
+<p>moov_engine.cancel</p>
+</li><li>
 <p>moov_engine.cancel ‘GUID_OF_VIDEO’</p>
 </li></ul>
             
@@ -410,9 +414,9 @@ href="MoovEngine.html#method-c-new">MoovAtom::MoovEngine.new(args)</a></p>
             
             <div class="method-source-code" id="cancel-source">
 <pre>
-<span class="ruby-comment"># File lib/moovatom.rb, line 104</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">cancel</span>(<span class="ruby-identifier">guid</span>)
-  <span class="ruby-ivar">@guid</span> = <span class="ruby-identifier">guid</span>
+<span class="ruby-comment"># File lib/moovatom.rb, line 118</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">cancel</span>(<span class="ruby-identifier">guid</span> = <span class="ruby-string">&quot;&quot;</span>)
+  <span class="ruby-ivar">@guid</span> = <span class="ruby-identifier">guid</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@guid</span>.<span class="ruby-identifier">nil?</span>
   <span class="ruby-ivar">@action</span> = <span class="ruby-string">'cancel'</span>
   <span class="ruby-ivar">@xml_response</span> = <span class="ruby-identifier">send_xml_request</span>(<span class="ruby-identifier">build_xml_request</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -432,7 +436,7 @@ href="MoovEngine.html#method-c-new">MoovAtom::MoovEngine.new(args)</a></p>
           
           <div class="method-heading">
             <span class="method-name">details</span><span
-              class="method-args">(guid)</span>
+              class="method-args">(guid = "")</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
           
@@ -442,10 +446,14 @@ href="MoovEngine.html#method-c-new">MoovAtom::MoovEngine.new(args)</a></p>
             <p>Use this method to get the details about a video that’s finished encoding.
 This method requires @username, @userkey and @guid to be set.</p>
 
+<p>If @guid has not yet been set then you can pass it in the hash argument.</p>
+
 <p>@TODO add the ability to yield to a block</p>
 
 <p>Usage:</p>
 <ul><li>
+<p>moov_engine.details</p>
+</li><li>
 <p>moov_engine.details ‘GUID_OF_VIDEO’</p>
 </li></ul>
             
@@ -453,9 +461,9 @@ This method requires @username, @userkey and @guid to be set.</p>
             
             <div class="method-source-code" id="details-source">
 <pre>
-<span class="ruby-comment"># File lib/moovatom.rb, line 61</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">details</span>(<span class="ruby-identifier">guid</span>)
-  <span class="ruby-ivar">@guid</span> = <span class="ruby-identifier">guid</span>
+<span class="ruby-comment"># File lib/moovatom.rb, line 64</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">details</span>(<span class="ruby-identifier">guid</span> = <span class="ruby-string">&quot;&quot;</span>)
+  <span class="ruby-ivar">@guid</span> = <span class="ruby-identifier">guid</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@guid</span>.<span class="ruby-identifier">nil?</span>
   <span class="ruby-ivar">@action</span> = <span class="ruby-string">'details'</span>
   <span class="ruby-ivar">@xml_response</span> = <span class="ruby-identifier">send_xml_request</span>(<span class="ruby-identifier">build_xml_request</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -511,10 +519,15 @@ following variables be set:</p>
             
             <div class="method-source-code" id="encode-source">
 <pre>
-<span class="ruby-comment"># File lib/moovatom.rb, line 94</span>
+<span class="ruby-comment"># File lib/moovatom.rb, line 100</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">encode</span>
   <span class="ruby-ivar">@action</span> = <span class="ruby-string">'encode'</span>
   <span class="ruby-ivar">@xml_response</span> = <span class="ruby-identifier">send_xml_request</span>(<span class="ruby-identifier">build_xml_request</span>)
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@xml_response</span>.<span class="ruby-identifier">code</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;200&quot;</span>
+    <span class="ruby-identifier">xml_doc</span> = <span class="ruby-constant">REXML</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span> <span class="ruby-ivar">@xml_response</span>.<span class="ruby-identifier">body</span>
+    <span class="ruby-ivar">@guid</span> = <span class="ruby-identifier">xml_doc</span>.<span class="ruby-identifier">root</span>.<span class="ruby-identifier">elements</span>[<span class="ruby-string">&quot;uuid&quot;</span>].<span class="ruby-identifier">text</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
             </div><!-- encode-source -->
             
@@ -532,7 +545,7 @@ following variables be set:</p>
           
           <div class="method-heading">
             <span class="method-name">status</span><span
-              class="method-args">(guid)</span>
+              class="method-args">(guid = "")</span>
             <span class="method-click-advice">click to toggle source</span>
           </div>
           
@@ -542,10 +555,14 @@ following variables be set:</p>
             <p>Use this method to get the status of a video that is currently being
 encoded. This method requires @username, @userkey and @guid to be set.</p>
 
+<p>If @guid has not yet been set then you can pass it in the hash argument.</p>
+
 <p>@TODO add the ability to yield to a block</p>
 
 <p>Usage:</p>
 <ul><li>
+<p>moov_engine.status</p>
+</li><li>
 <p>moov_engine.status ‘GUID_OF_VIDEO’</p>
 </li></ul>
             
@@ -553,9 +570,9 @@ encoded. This method requires @username, @userkey and @guid to be set.</p>
             
             <div class="method-source-code" id="status-source">
 <pre>
-<span class="ruby-comment"># File lib/moovatom.rb, line 74</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">status</span>(<span class="ruby-identifier">guid</span>)
-  <span class="ruby-ivar">@guid</span> = <span class="ruby-identifier">guid</span>
+<span class="ruby-comment"># File lib/moovatom.rb, line 80</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">status</span>(<span class="ruby-identifier">guid</span> = <span class="ruby-string">&quot;&quot;</span>)
+  <span class="ruby-ivar">@guid</span> = <span class="ruby-identifier">guid</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@guid</span>.<span class="ruby-identifier">nil?</span>
   <span class="ruby-ivar">@action</span> = <span class="ruby-string">'status'</span>
   <span class="ruby-ivar">@xml_response</span> = <span class="ruby-identifier">send_xml_request</span>(<span class="ruby-identifier">build_xml_request</span>)
 <span class="ruby-keyword">end</span></pre>
