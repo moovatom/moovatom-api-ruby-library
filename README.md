@@ -35,7 +35,7 @@ Installing the gem is as simple as `gem install moovatom`. However, this library
   gem 'moovatom', :git => "git://github.com/humanshell/moovatom.git"
 </code>
 
-There is a single module constant named `API_URL` that defines the URL to which the XML requests must be POST'd to. There are eight writable instance variables and one readable variable. The single readable variable is `@xml_response`. It's function is to hold the last response received from MoovAtom's servers. The other variables are as follows:
+There is a single module constant named `API_URL` that defines the URL to which the XML requests must be POST'd. There are eight writable instance variables and one readable variable. The single readable variable is `@xml_response`. It's responsible for holding the last response received from MoovAtom's servers. The other variables are as follows:
 
 1. `@guid`
 2. `@username`
@@ -51,7 +51,7 @@ These variables are used to communicate details about your account and your vide
 <code>
   require 'moovatom'  
   include MoovAtom  
-  args = { :title => "My Super Video", :sourcefile => "http://example.com/supervideo.mp4", etc... }
+  args = { title: "My Super Video", sourcefile: "http://example.com/supervideo.mp4", etc... }  
   new_conn = MoovEngine.new args
 </code>
 
@@ -61,7 +61,7 @@ Or...
   require 'moovatom'  
   include MoovAtom  
   new_conn = MoovEngine.new  
-  new_conn.title = "My Super Video"
+  new_conn.title = "My Super Video"  
   new_conn.sourcefile = "http://example.com/supervideo.mp4"
 </code>
 
