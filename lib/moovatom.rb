@@ -38,7 +38,7 @@ module MoovAtom
     # * etc...
     #
     # Or:
-    # * args = { :username => 'YOUR_USERNAME', :userkey => 'YOUR_USERKEY', etc... }
+    # * args = { username: 'YOUR_USERNAME', userkey: 'YOUR_USERKEY', etc... }
     # * moov_engine = MoovAtom::MoovEngine.new(args)
     def initialize(args={})
       @guid         = args[:guid]
@@ -54,9 +54,7 @@ module MoovAtom
     # Use this method to get the details about a video that's finished encoding.
     # This method requires @username, @userkey and @guid to be set.
     #
-    # If @guid has not yet been set then you can pass it in the hash argument.
-    #
-    # @TODO add the ability to yield to a block
+    # If @guid has not yet been set then you can pass it in as a string argument.
     #
     # Usage:
     # * moov_engine.details
@@ -70,9 +68,7 @@ module MoovAtom
     # Use this method to get the status of a video that is currently being encoded.
     # This method requires @username, @userkey and @guid to be set.
     #
-    # If @guid has not yet been set then you can pass it in the hash argument.
-    #
-    # @TODO add the ability to yield to a block
+    # If @guid has not yet been set then you can pass it in as a string argument.
     #
     # Usage:
     # * moov_engine.status
@@ -93,10 +89,8 @@ module MoovAtom
     # * @sourcefile
     # * @callbackurl
     #
-    # @TODO this method <b>REALLY</b> needs to be able to yield to a block!
-    #
     # Usage:
-    # * moov_engine.status 'GUID_OF_VIDEO'
+    # * moov_engine.details
     def encode
       @action = 'encode'
       @xml_response = send_xml_request(build_xml_request)
@@ -110,7 +104,7 @@ module MoovAtom
     # Use this method to cancel the encoding of a video.
     # This method requires @username, @userkey and @guid to be set.
     #
-    # If @guid has not yet been set then you can pass it in the hash argument.
+    # If @guid has not yet been set then you can pass it in as a string argument.
     #
     # Usage:
     # * moov_engine.cancel
