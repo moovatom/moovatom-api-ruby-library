@@ -1,6 +1,6 @@
-$:.unshift(File.dirname(__FILE__))
-$:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-
+gem "minitest"
 require "minitest/autorun"
+require "turn"
+require "fakeweb"
 require "moovatom"
 
