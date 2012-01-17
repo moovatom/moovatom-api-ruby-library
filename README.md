@@ -124,8 +124,80 @@ Error:
 
 Details
 =======
-Coming soon...
+When you need to get the details about an encoding that has finished on Moovatom's server you need a `MoovAtom::MoovEngine` object populated with the following information:
 
+```
+new_conn = MoovAtom::MoovEngine.new
+
+new_conn.username = "MOOVATOM_USERNAME"
+new_conn.userkey = "MOOVATOM_USERKEY"
+new_conn.uuid = "UUID_OF_VIDEO"
+
+response = new_conn.details
+```
+
+The response from a request for details contains the same information returned to the `@callbackurl` when an encoding completes:
+
+```
+<?xml version="1.0"?>
+<response>
+    <uuid>UUID</uuid>
+    <media_type>video</media_type>
+    <embed_code>EMBED CODE IFRAME FOR SMART SWITCHING</embed_code>
+    <iframe_target>http://www.moovatom.com/media/embed/SHORTID</iframe_target>
+    <original_download>http://www.moovatom.com/media/download/orig/UUID</original_download>
+    <versions>
+        <version>
+            <name>mobile</name>
+            <type>video/mp4</type>
+            <holdframe_download>http://www.moovatom.com/PATH_TO_FILE</holdframe_download>
+            <thumbnail_download>http://www.moovatom.com/PATH_TO_FILE</thumbnail_download>
+            <holdframe_serve>http://static.moovatom.com/PATH_TO_FILE</holdframe_serve>
+            <thumbnail_serve>http://static.moovatom.com/PATH_TO_FILE</thumbnail_serve>
+            <rtmp_stream>rtmp://media.moovatom.com/PATH_TO_FILE</rtmp_stream>
+            <http_stream>http://media.moovatom.com:1935/PATH_TO_FILE</http_stream>
+            <rtsp_stream>rtsp://media.moovatom.com:1935/PATH_TO_FILE</rtsp_stream>
+            <download>http://www.moovatom.com/PATH_TO_FILE</download>
+        </version>
+        <version>
+            <name>small</name>
+            <type>video/mp4</type>
+            <holdframe_download>http://www.moovatom.com/PATH_TO_FILE</holdframe_download>
+            <thumbnail_download>http://www.moovatom.com/PATH_TO_FILE</thumbnail_download>
+            <holdframe_serve>http://static.moovatom.com/PATH_TO_FILE</holdframe_serve>
+            <thumbnail_serve>http://static.moovatom.com/PATH_TO_FILE</thumbnail_serve>
+            <rtmp_stream>rtmp://media.moovatom.com/PATH_TO_FILE</rtmp_stream>
+            <http_stream>http://media.moovatom.com:1935/PATH_TO_FILE</http_stream>
+            <rtsp_stream>rtsp://media.moovatom.com:1935/PATH_TO_FILE</rtsp_stream>
+            <download>http://www.moovatom.com/PATH_TO_FILE</download>
+        </version>
+        <version>
+            <name>medium</name>
+            <type>video/mp4</type>
+            <holdframe_download>http://www.moovatom.com/PATH_TO_FILE</holdframe_download>
+            <thumbnail_download>http://www.moovatom.com/PATH_TO_FILE</thumbnail_download>
+            <holdframe_serve>http://static.moovatom.com/PATH_TO_FILE</holdframe_serve>
+            <thumbnail_serve>http://static.moovatom.com/PATH_TO_FILE</thumbnail_serve>
+            <rtmp_stream>rtmp://media.moovatom.com/PATH_TO_FILE</rtmp_stream>
+            <http_stream>http://media.moovatom.com:1935/PATH_TO_FILE</http_stream>
+            <rtsp_stream>rtsp://media.moovatom.com:1935/PATH_TO_FILE</rtsp_stream>
+            <download>http://www.moovatom.com/PATH_TO_FILE</download>
+        </version>
+        <version>
+            <name>large</name>
+            <type>video/mp4</type>
+            <holdframe_download>http://www.moovatom.com/PATH_TO_FILE</holdframe_download>
+            <thumbnail_download>http://www.moovatom.com/PATH_TO_FILE</thumbnail_download>
+            <holdframe_serve>http://static.moovatom.com/PATH_TO_FILE</holdframe_serve>
+            <thumbnail_serve>http://static.moovatom.com/PATH_TO_FILE</thumbnail_serve>
+            <rtmp_stream>rtmp://media.moovatom.com/PATH_TO_FILE</rtmp_stream>
+            <http_stream>http://media.moovatom.com:1935/PATH_TO_FILE</http_stream>
+            <rtsp_stream>rtsp://media.moovatom.com:1935/PATH_TO_FILE</rtsp_stream>
+            <download>http://www.moovatom.com/PATH_TO_FILE</download>
+        </version>
+    </versions>
+</response>
+```
 
 Cancel
 ======
