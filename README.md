@@ -80,8 +80,6 @@ response = new_conn.encode
 
 The video you want to submit to Moovatom must be placed in a publicly accessible location. You should map the callback url to a controller that stores the uuid returned by the Moovatom servers into your database. You can use that uuid in the remaining request methods to access that specific encoding. Future versions of the gem will accept a block when instantiating a MoovEngine object.
 
-For more specific instructions on using the Moovatom API please check the [documentation](http://www.moovatom.com/support/requests.html)
-
 Status
 ======
 To retrieve the status of an existing encoding on Moovatom's servers you need a `MoovAtom::MoovEngine` object populated with the following information:
@@ -201,5 +199,30 @@ The response from a request for details contains the same information returned t
 
 Cancel
 ======
-Coming soon...
+To cancel an unfinished encoding on Moovatom's servers you need a `MoovAtom::MoovEngine` object populated with the following information:
+
+```
+new_conn = MoovAtom::MoovEngine.new
+
+new_conn.username = "MOOVATOM_USERNAME"
+new_conn.userkey = "MOOVATOM_USERKEY"
+new_conn.uuid = "UUID_OF_VIDEO"
+
+response = new_conn.cancel
+```
+
+A successful cancellation results in the following response:
+
+```
+<?xml version="1.0"?>   
+<response>
+  <uuid>UUID</uuid>
+  <message>This job was successfully cancelled.</message>
+</response>
+```
+
+For more specific instructions on using the Moovatom API please check the [documentation](http://www.moovatom.com/support/requests.html)
+
+Testing
+=======
 
