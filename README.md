@@ -75,7 +75,7 @@ new_conn.blurb = "The gratest movie ever made!"
 new_conn.sourcefile = "http://example.com/greatest_movie_ever.mp4"
 new_conn.callbackurl = "/moovatom_callback"
 
-new_conn.encode
+response = new_conn.encode
 ```
 
 The video you want to submit to Moovatom must be placed in a publicly accessible location. You should map the callback url to a controller that stores the uuid returned by the Moovatom servers into your database. You can use that uuid in the remaining request methods to access that specific encoding. Future versions of the gem will accept a block when instantiating a MoovEngine object.
@@ -84,8 +84,41 @@ For more specific instructions on using the Moovatom API please check the [docum
 
 Status
 ======
-Coming soon...
+To retrieve the status of an existing encoding on Moovatom's servers you need a `MoovAtom::MoovEngine` object populated with the following information:
 
+```
+new_conn = MoovAtom::MoovEngine.new
+
+new_conn.username = "MOOVATOM_USERNAME"
+new_conn.userkey = "MOOVATOM_USERKEY"
+new_conn.uuid = "UUID_OF_VIDEO"
+
+response = new_conn.status
+```
+
+The Moovatom servers will respond one of two ways:
+
+Success:
+```
+<?xml version="1.0"?>      
+<response>
+  <uuid>UUID</uuid>
+  <processing>True</processing>
+  <percent_complete>75</percent_complete>
+  <error></error>
+</response>
+```
+
+Error:
+```
+<?xml version="1.0"?>    
+<response>
+  <uuid>UUID</uuid>
+  <processing>False</processing>
+  <percent_complete>100</percent_complete>
+  <error>This was not a recognized format.</error>
+</response>  
+```
 
 Details
 =======
