@@ -99,6 +99,7 @@ response = new_conn.status
 The Moovatom servers will respond one of two ways:
 
 Success:
+
 ```
 <?xml version="1.0"?>      
 <response>
@@ -110,6 +111,7 @@ Success:
 ```
 
 Error:
+
 ```
 <?xml version="1.0"?>    
 <response>
