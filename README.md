@@ -225,4 +225,5 @@ For more specific instructions on using the Moovatom API please check the [docum
 
 Testing
 =======
+This gem uses [Minitest](https://github.com/seattlerb/minitest), [Turn](https://github.com/TwP/turn) and [Fakeweb](https://github.com/chrisk/fakeweb) to implement specs for each of the above four request methods.
 
