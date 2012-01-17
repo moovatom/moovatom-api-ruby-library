@@ -61,11 +61,24 @@ new_conn.title = "My Super Video"
 new_conn.sourcefile = "http://example.com/supervideo.mp4"
 ```
 
-
 Encoding
 ========
-Coming soon...
+To start a new encoding on Moovatom's servers you need to create a `MoovAtom::MoovEngine` object populated with the following information:
 
+```
+new_conn = MoovAtom::MoovEngine.new
+
+new_conn.username = "MOOVATOM_USERNAME"
+new_conn.userkey = "MOOVATOM_USERKEY"
+new_conn.title = "The Greatest Movie Ever"
+new_conn.blurb = "The gratest movie ever made!"
+new_conn.sourcefile = "http://example.com/greatest_movie_ever.mp4"
+new_conn.callbackurl = "/moovatom_callback"
+
+new_conn.encode
+```
+
+The video you want to submit to Moovatom must be placed in a publicly accessible location. You should map the callback url to a controller that stores the uuid returned by the Moovatom servers into your database. You can use that uuid in the remaining request methods to access that specific encoding. Future versions of the gem will accept a block when instantiating a MoovEngine object.
 
 Status
 ======
