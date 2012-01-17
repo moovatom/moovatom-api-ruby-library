@@ -31,6 +31,12 @@ This code allows you to create a new instance without needing to enter the modul
 
 Installing the gem is as simple as `gem install moovatom`.
 
+Or by adding the following line to your project's Gemfile:
+
+```
+gem "moovatom", "~>0.1.2"
+```
+
 There is a single module constant named `API_URL` that defines the URL to which the XML requests must be POST'd. There are eight writable instance variables and one readable variable. The single readable variable is `@xml_response`. It's responsible for holding the last response received from MoovAtom's servers. The other variables are as follows:
 
 1. `@guid`
