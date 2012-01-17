@@ -80,7 +80,7 @@ new_conn.encode
 
 The video you want to submit to Moovatom must be placed in a publicly accessible location. You should map the callback url to a controller that stores the uuid returned by the Moovatom servers into your database. You can use that uuid in the remaining request methods to access that specific encoding. Future versions of the gem will accept a block when instantiating a MoovEngine object.
 
-For more specific instructions on using the Moovatom API please check their [documentation](http://www.moovatom.com/support/requests.html)
+For more specific instructions on using the Moovatom API please check the [documentation](http://www.moovatom.com/support/requests.html)
 
 Status
 ======
