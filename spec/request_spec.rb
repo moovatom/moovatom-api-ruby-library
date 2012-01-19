@@ -2,17 +2,6 @@ require "spec_helper"
 
 describe MoovAtom::MoovEngine do
   before do
-    @args = {
-      username: 'jsmith',
-      userkey: '123',
-      guid: '456',
-      title: 'Test Video Title',
-      blurb: 'A Short description about the video.',
-      sourcefile: 'http://example.com/path/to/file/test.mp4',
-      callbackurl: 'http://example.com/job_complete'
-    }
-
-    @moov_engine = MoovAtom::MoovEngine.new @args
   end
 
   after do
