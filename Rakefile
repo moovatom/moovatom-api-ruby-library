@@ -9,6 +9,12 @@ Rake::TestTask.new(:minitest) do |t|
   t.libs << 'spec'
   t.test_files = FileList['spec/*_spec.rb']
 end
+
+desc "Generate Documentation"
+task :doc do
+  system "rm -rf doc/"
+  system "rdoc"
+end
  
 desc "Build gem"
 task :build do
