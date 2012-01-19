@@ -15,42 +15,67 @@
 
 #-- wrap the whole library in a module to enforce namespace
 module MoovAtom
-  
-  #-- MoovAtom module constants
   API_URL_V1  = 'https://moovatom.com/api/api_request'
   API_URL_V2  = 'https://www.moovatom.com/api/v2'
   
   class MoovEngine
-    
-    #-- class setters and getters
     attr_reader :xml_response
     attr_accessor :uuid, :username, :userkey, :content_type, :title, :blurb,
                   :sourcefile, :callbackurl
     
-    # The initializer populates the instance variables to hold all the
-    # specifics about the video you're accessing. You can define these
-    # variables when instantiating a new MoovEngine object or after a blank
-    # object has been created. All variables with the exception of
-    # @xml_response and @action are writable. @xml_response is only readable
-    # because it contains the response from MoovAtom's servers. @action gets
-    # set in each of the methods below to correctly correspond with the
-    # associated request.
+    ##
+    # The initializer populates the class' instance variables to hold all the
+    # specifics about the video you're accessing or starting to encode.
     #
-    # Usage:
+    # There are three ways to instantiate a new MoovEngine object:
     #
+    # Create a new blank object and set each variable using the traditional
+    # dot notation:
+    #
+    #   me = MoovAtom::MoovEngine.new
+    #   me.uuid = '123'
+    #   me.username = 'jsmith'
+    #   etc...
+    # 
+    # Supply a hash of variables as an argument:
+    #
+    #   me = MoovAtom::MoovEngine.new(uuid: '123', username: 'jsmith', etc...)
+    # 
+    # Use a block to set variables. The initialize method yields _self_ to
+    # the block given:
+    #
+    #   me = MoovAtom::MoovEngine.new do |me|
+    #     me.uuid = '123'
+    #     me.username = 'jsmith'
+    #     etc...
+    #   end
+    #
+    # _self_ is yielded to the block after the hash argument has been processed
+    # so you can create a new object using a combination of hash and block:
+    #
+    #   me = MoovAtom::MoovEngine.new(uuid: '123') do |me|
+    #     me.username = 'jsmith'
+    #     me.userkey = '987654321'
+    #     etc...
+    #   end
+    #
+    # All variables with the exception of @xml_response and @action are
+    # writable. @xml_response is only readable because it contains the
+    # response from MoovAtom's servers. @action gets set in each of the
+    # request methods below to correctly correspond with the actions you're
+    # asking MoovAtom to perform. @content_type will default to 'video' if you
+    # don't supply a value, 'video' is Moovatom's default content type.
+    
     def initialize(attrs={}, &block)
       attrs.each {|k,v| instance_variable_set "@#{k}", v}
       yield self if block_given?
       @content_type = 'video' if @content_type.nil?
     end #-- initialize method
     
-    # Use this method to get the details about a video that's finished
-    # encoding. This method requires @username, @userkey and @uuid to be set.
+    ##
     #
-    # If @uuid has not been set then you can pass it in as a string argument.
     #
-    # Usage:
-    #
+
     def details()
       @action = 'details'
     end #-- details method
@@ -93,7 +118,6 @@ module MoovAtom
       @action = 'cancel'
     end #-- cancel method
     
-    #-- start of private methods
     private
     
     # Creates the XML object that is post'd to the MoovAtom servers
