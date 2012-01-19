@@ -38,7 +38,10 @@ module MoovAtom
     #
     # Usage:
     #
-    def initialize()
+    def initialize(attrs={}, &block)
+      attrs.each {|k,v| instance_variable_set "@#{k}", v}
+      yield self if block_given?
+      @content_type = 'video' if @content_type.nil?
     end #-- initialize method
     
     # Use this method to get the details about a video that's finished
