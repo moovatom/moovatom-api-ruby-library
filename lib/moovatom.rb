@@ -80,40 +80,26 @@ module MoovAtom
       @action = 'details'
     end #-- details method
     
-    # Use this method to get the status of a video that is currently being
-    # encoded. This method requires @username, @userkey and @uuid to be set.
+    ##
     #
-    # If @uuid has not been set then you can pass it in as a string argument.
     #
-    # Usage:
-    #
+
     def status()
       @action = 'status'
     end #-- end status method
     
-    # Use this method to start encoding a new video.
-    # This method requires the following variables be set:
-    # * @username
-    # * @userkey
-    # * @content_type
-    # * @title
-    # * @blurb
-    # * @sourcefile
-    # * @callbackurl
+    ##
     #
-    # Usage:
     #
+
     def encode
       @action = 'encode'
     end #-- encode method
     
-    # Use this method to cancel the encoding of a video.
-    # This method requires @username, @userkey and @uuid to be set.
+    ##
     #
-    # If @uuid has not been set then you can pass it in as a string argument.
     #
-    # Usage:
-    #
+
     def cancel()
       @action = 'cancel'
     end #-- cancel method
