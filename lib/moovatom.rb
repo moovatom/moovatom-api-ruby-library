@@ -38,7 +38,7 @@ module MoovAtom
     #
     # Usage:
     #
-    def initialize(args={})
+    def initialize()
     end #-- initialize method
     
     # Use this method to get the details about a video that's finished
@@ -48,7 +48,7 @@ module MoovAtom
     #
     # Usage:
     #
-    def details(uuid = "")
+    def details()
       @action = 'details'
     end #-- details method
     
@@ -59,7 +59,7 @@ module MoovAtom
     #
     # Usage:
     #
-    def status(uuid = "")
+    def status()
       @action = 'status'
     end #-- end status method
     
@@ -86,7 +86,7 @@ module MoovAtom
     #
     # Usage:
     #
-    def cancel(uuid = "")
+    def cancel()
       @action = 'cancel'
     end #-- cancel method
     
