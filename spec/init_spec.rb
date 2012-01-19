@@ -55,4 +55,8 @@ describe MoovAtom::MoovEngine, "Initialization Unit Tests" do
     MoovAtom::MoovEngine.new.content_type.must_equal 'video'
   end
 
+  it "defaults to a format of json" do
+    MoovAtom::MoovEngine.new.format.must_equal 'json'
+  end
+
 end

@@ -78,6 +78,10 @@ describe MoovAtom::MoovEngine, "Details Request Unit Tests" do
   end
 
   it "sets the action instance variable to details" do
+    me = MoovAtom::MoovEngine.new @vars1
+    me.get_details
+
+    me.action.must_equal 'details'
   end
 
 end

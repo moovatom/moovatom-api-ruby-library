@@ -19,7 +19,7 @@ module MoovAtom
   API_URL_V2  = 'https://www.moovatom.com/api/v2'
   
   class MoovEngine
-    attr_reader :xml_response
+    attr_reader :xml_response, :action, :format
     attr_accessor :uuid, :username, :userkey, :content_type, :title, :blurb,
                   :sourcefile, :callbackurl
     
@@ -70,6 +70,7 @@ module MoovAtom
       attrs.each {|k,v| instance_variable_set "@#{k}", v}
       yield self if block_given?
       @content_type = 'video' if @content_type.nil?
+      @format = 'json' if @format.nil?
     end #-- initialize method
     
     ##
