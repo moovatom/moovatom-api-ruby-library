@@ -38,14 +38,6 @@ module MoovAtom
     # Usage:
     #
     def initialize(args={})
-      @guid         = args[:guid]
-      @username     = args[:username]
-      @userkey      = args[:userkey]
-      @content_type = args[:content_type] || "video"
-      @title        = args[:title]
-      @blurb        = args[:blurb]
-      @sourcefile   = args[:sourcefile]
-      @callbackurl  = args[:callbackurl]
     end #-- initialize method
     
     # Use this method to get the details about a video that's finished
@@ -56,9 +48,7 @@ module MoovAtom
     # Usage:
     #
     def details(guid = "")
-      @guid = guid if @guid.nil?
       @action = 'details'
-      @xml_response = send_xml_request(build_xml_request)
     end #-- details method
     
     # Use this method to get the status of a video that is currently being
@@ -69,9 +59,7 @@ module MoovAtom
     # Usage:
     #
     def status(guid = "")
-      @guid = guid if @guid.nil?
       @action = 'status'
-      @xml_response = send_xml_request(build_xml_request)
     end #-- end status method
     
     # Use this method to start encoding a new video.
@@ -88,12 +76,6 @@ module MoovAtom
     #
     def encode
       @action = 'encode'
-      @xml_response = send_xml_request(build_xml_request)
-      
-      if @xml_response.code == "200"
-        xml_doc = REXML::Document.new @xml_response.body
-        @guid = xml_doc.root.elements["uuid"].text
-      end
     end #-- encode method
     
     # Use this method to cancel the encoding of a video.
@@ -104,9 +86,7 @@ module MoovAtom
     # Usage:
     #
     def cancel(guid = "")
-      @guid = guid if @guid.nil?
       @action = 'cancel'
-      @xml_response = send_xml_request(build_xml_request)
     end #-- cancel method
     
     #-- start of private methods
