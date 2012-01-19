@@ -10,7 +10,6 @@ describe MoovAtom::MoovEngine, "Details Request Unit Tests" do
       uuid: '123',
       username: 'jsmith',
       userkey: '987654321',
-      content_type: 'video',
       title: 'My Greatest Movie',
       blurb: 'The greatest movie ever made',
       sourcefile: 'http://example.com/greatest.mp4',
@@ -21,7 +20,6 @@ describe MoovAtom::MoovEngine, "Details Request Unit Tests" do
       uuid: '321',
       username: 'asmith',
       userkey: '123456789',
-      content_type: 'video',
       title: 'My Best Movie',
       blurb: 'The bestest movie ever made',
       sourcefile: 'http://example.com/best.mp4',
@@ -37,7 +35,6 @@ describe MoovAtom::MoovEngine, "Details Request Unit Tests" do
     me.uuid.must_equal @vars2[:uuid]
     me.username.must_equal @vars2[:username]
     me.userkey.must_equal @vars2[:userkey]
-    me.content_type.must_equal @vars2[:content_type]
     me.title.must_equal @vars2[:title]
     me.blurb.must_equal @vars2[:blurb]
     me.sourcefile.must_equal @vars2[:sourcefile]
@@ -49,7 +46,6 @@ describe MoovAtom::MoovEngine, "Details Request Unit Tests" do
       me.uuid = @vars1[:uuid]
       me.username = @vars1[:username]
       me.userkey = @vars1[:userkey]
-      me.content_type = @vars1[:content_type]
       me.title = @vars1[:title]
       me.blurb = @vars1[:blurb]
       me.sourcefile = @vars1[:sourcefile]
@@ -60,7 +56,6 @@ describe MoovAtom::MoovEngine, "Details Request Unit Tests" do
       me.uuid = @vars2[:uuid]
       me.username = @vars2[:username]
       me.userkey = @vars2[:userkey]
-      me.content_type = @vars2[:content_type]
       me.title = @vars2[:title]
       me.blurb = @vars2[:blurb]
       me.sourcefile = @vars2[:sourcefile]
@@ -70,7 +65,6 @@ describe MoovAtom::MoovEngine, "Details Request Unit Tests" do
     me.uuid.must_equal @vars2[:uuid]
     me.username.must_equal @vars2[:username]
     me.userkey.must_equal @vars2[:userkey]
-    me.content_type.must_equal @vars2[:content_type]
     me.title.must_equal @vars2[:title]
     me.blurb.must_equal @vars2[:blurb]
     me.sourcefile.must_equal @vars2[:sourcefile]

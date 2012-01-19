@@ -10,7 +10,6 @@ describe MoovAtom::MoovEngine, "Initialization Unit Tests" do
       uuid: '123',
       username: 'jsmith',
       userkey: '987654321',
-      content_type: 'video',
       title: 'My Great Movie',
       blurb: 'The greatest movie ever made',
       sourcefile: 'http://example.com/great.mp4',
@@ -22,7 +21,6 @@ describe MoovAtom::MoovEngine, "Initialization Unit Tests" do
     me.uuid.must_equal '123'
     me.username.must_equal 'jsmith'
     me.userkey.must_equal '987654321'
-    me.content_type.must_equal 'video'
     me.title.must_equal 'My Great Movie'
     me.blurb.must_equal 'The greatest movie ever made'
     me.sourcefile.must_equal 'http://example.com/great.mp4'
@@ -34,7 +32,6 @@ describe MoovAtom::MoovEngine, "Initialization Unit Tests" do
       me.uuid = '123'
       me.username = 'jsmith'
       me.userkey = '987654321'
-      me.content_type = 'video'
       me.title = 'My Great Movie'
       me.blurb = 'The greatest movie ever made'
       me.sourcefile = 'http://example.com/great.mp4'
@@ -44,7 +41,6 @@ describe MoovAtom::MoovEngine, "Initialization Unit Tests" do
     me.uuid.must_equal '123'
     me.username.must_equal 'jsmith'
     me.userkey.must_equal '987654321'
-    me.content_type.must_equal 'video'
     me.title.must_equal 'My Great Movie'
     me.blurb.must_equal 'The greatest movie ever made'
     me.sourcefile.must_equal 'http://example.com/great.mp4'
