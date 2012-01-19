@@ -76,9 +76,11 @@ module MoovAtom
     #
     #
 
-    def details()
+    def get_details(attrs={}, &block)
       @action = 'details'
-    end #-- details method
+      attrs.each {|k,v| instance_variable_set "@#{k}", v}
+      yield self if block_given?
+    end #-- get_details method
     
     ##
     #
