@@ -17,7 +17,8 @@
 module MoovAtom
   
   #-- MoovAtom module constants
-  API_URL  = 'https://moovatom.com/api/api_request'
+  API_URL_V1  = 'https://moovatom.com/api/api_request'
+  API_URL_V2  = 'https://www.moovatom.com/api/v2'
   
   class MoovEngine
     
@@ -110,8 +111,8 @@ module MoovAtom
     end #-- build_xml_request method
     
     # Sends the XML object to the MoovAtom servers
-    def send_xml_request(xml)
-      uri = URI.parse(MoovAtom::API_URL)
+    def send_xml_request(xml, url = MoovAtom::API_URL_V2)
+      uri = URI.parse(url)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
