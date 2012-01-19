@@ -59,12 +59,13 @@ module MoovAtom
     #     etc...
     #   end
     #
-    # All variables with the exception of @xml_response and @action are
-    # writable. @xml_response is only readable because it contains the
+    # All variables with the exception of @xml_response, @action and @format
+    # are writable. @xml_response is readable because it contains the
     # response from MoovAtom's servers. @action gets set in each of the
     # request methods below to correctly correspond with the actions you're
-    # asking MoovAtom to perform. @content_type will default to 'video' if you
-    # don't supply a value, 'video' is Moovatom's default content type.
+    # asking MoovAtom to perform. @format allows you to use xml or json in your
+    # requests, it's set to json by default. @content_type will default to
+    # 'video'.
     
     def initialize(attrs={}, &block)
       attrs.each {|k,v| instance_variable_set "@#{k}", v}
