@@ -24,7 +24,7 @@ module MoovAtom
     
     #-- class setters and getters
     attr_reader :xml_response
-    attr_accessor :guid, :username, :userkey, :content_type, :title, :blurb,
+    attr_accessor :uuid, :username, :userkey, :content_type, :title, :blurb,
                   :sourcefile, :callbackurl
     
     # The initializer populates the instance variables to hold all the
@@ -42,24 +42,24 @@ module MoovAtom
     end #-- initialize method
     
     # Use this method to get the details about a video that's finished
-    # encoding. This method requires @username, @userkey and @guid to be set.
+    # encoding. This method requires @username, @userkey and @uuid to be set.
     #
-    # If @guid has not been set then you can pass it in as a string argument.
+    # If @uuid has not been set then you can pass it in as a string argument.
     #
     # Usage:
     #
-    def details(guid = "")
+    def details(uuid = "")
       @action = 'details'
     end #-- details method
     
     # Use this method to get the status of a video that is currently being
-    # encoded. This method requires @username, @userkey and @guid to be set.
+    # encoded. This method requires @username, @userkey and @uuid to be set.
     #
-    # If @guid has not been set then you can pass it in as a string argument.
+    # If @uuid has not been set then you can pass it in as a string argument.
     #
     # Usage:
     #
-    def status(guid = "")
+    def status(uuid = "")
       @action = 'status'
     end #-- end status method
     
@@ -80,13 +80,13 @@ module MoovAtom
     end #-- encode method
     
     # Use this method to cancel the encoding of a video.
-    # This method requires @username, @userkey and @guid to be set.
+    # This method requires @username, @userkey and @uuid to be set.
     #
-    # If @guid has not been set then you can pass it in as a string argument.
+    # If @uuid has not been set then you can pass it in as a string argument.
     #
     # Usage:
     #
-    def cancel(guid = "")
+    def cancel(uuid = "")
       @action = 'cancel'
     end #-- cancel method
     
@@ -98,7 +98,7 @@ module MoovAtom
       b = Builder::XmlMarkup.new
       b.instruct!
       xml = b.request do |r|
-        r.uuid(@guid)
+        r.uuid(@uuid)
         r.username(@username)
         r.userkey(@userkey)
         r.action(@action)
