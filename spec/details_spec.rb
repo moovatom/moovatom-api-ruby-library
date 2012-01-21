@@ -29,9 +29,13 @@ describe MoovAtom::MoovEngine, "Details Request Unit Tests" do
 
   it "accepts a hash to update internal variables" do
 
+    # create a MoovEngine object using the values from the @vars1 hash
     me = MoovAtom::MoovEngine.new @vars1
+
+    # call get_details() passing the hash of values from @vars2
     me.get_details @vars2
 
+    # the instance 'me' should now contain the values from the @vars2 hash
     me.uuid.must_equal @vars2[:uuid]
     me.username.must_equal @vars2[:username]
     me.userkey.must_equal @vars2[:userkey]
@@ -42,6 +46,8 @@ describe MoovAtom::MoovEngine, "Details Request Unit Tests" do
   end
 
   it "accepts a block to update internal variables" do
+
+    # create a new MoovEngine object with a block using the values from @vars1
     me = MoovAtom::MoovEngine.new do |me|
       me.uuid = @vars1[:uuid]
       me.username = @vars1[:username]
@@ -52,6 +58,8 @@ describe MoovAtom::MoovEngine, "Details Request Unit Tests" do
       me.callbackurl = @vars1[:callbackurl]
     end
 
+    # call get_details() passing a block that sets instance variables to the
+    # values in the @vars2 hash
     me.get_details do |me|
       me.uuid = @vars2[:uuid]
       me.username = @vars2[:username]
@@ -62,6 +70,7 @@ describe MoovAtom::MoovEngine, "Details Request Unit Tests" do
       me.callbackurl = @vars2[:callbackurl]
     end
 
+    # the instance 'me' should now contain the values from the @vars2 hash
     me.uuid.must_equal @vars2[:uuid]
     me.username.must_equal @vars2[:username]
     me.userkey.must_equal @vars2[:userkey]
@@ -72,9 +81,14 @@ describe MoovAtom::MoovEngine, "Details Request Unit Tests" do
   end
 
   it "sets the action instance variable to details" do
+
+    # create a new MoovEngine object
     me = MoovAtom::MoovEngine.new @vars1
+
+    # call the get_details() method
     me.get_details
 
+    # after calling get_details() the @action should be 'details'
     me.action.must_equal 'details'
   end
 
