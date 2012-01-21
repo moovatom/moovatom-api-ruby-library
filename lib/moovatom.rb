@@ -11,7 +11,7 @@
 # License:: MIT
 
 #-- required gems/libraries
-%w[net/https rexml/document builder uri].each { |item| require item }
+%w[net/https rexml/document builder uri json].each { |item| require item }
 
 #-- wrap the whole library in a module to enforce namespace
 module MoovAtom
@@ -112,7 +112,16 @@ module MoovAtom
     # Creates the XML object that is post'd to the MoovAtom servers
     def build_request
       if @format == "json"
-
+        JSON.generate ['{
+          uuid: @uuid,
+          username: @username,
+          userkey: @userkey,
+          content_type: @content_type,
+          title: @title,
+          blurb: @blurb,
+          sourcefile: @sourcefile,
+          callbackurl: @callbackurl
+        }']
       else
         b = Builder::XmlMarkup.new
         b.instruct!
