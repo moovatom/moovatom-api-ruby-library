@@ -25,6 +25,18 @@ describe MoovAtom::MoovEngine, "Details Request Unit Tests" do
       sourcefile: 'http://example.com/best.mp4',
       callbackurl: 'http://example.com/callback_url'
     }
+
+    # mock up the connection to moovatom.com
+    @me = MoovAtom::MoovEngine.new @vars1
+    @url = "#{MoovAtom::API_URL}/detail"
+    json = File.join(File.dirname(__FILE__), 'fixtures', 'detail.json')
+    FakeWeb.register_uri(:post, "#{@url}.json", :body => json)
+    xml = File.join(File.dirname(__FILE__), 'fixtures', 'detail.xml')
+    FakeWeb.register_uri(:post, "#{@url}.xml", :body => xml)
+  end
+
+  after do
+    FakeWeb.clean_registry
   end
 
   it "accepts a hash to update internal variables" do
@@ -88,8 +100,50 @@ describe MoovAtom::MoovEngine, "Details Request Unit Tests" do
     # call the get_details() method
     me.get_details
 
-    # after calling get_details() the @action should be 'details'
-    me.action.must_equal 'details'
+    # after calling get_details() the @action should be 'detail'
+    me.action.must_equal 'detail'
+  end
+
+  # tests for the api call to get details about an existing video
+  describe "API Requests" do
+
+    it "builds well formed json" do
+      json = JSON.parse @me.build_request
+      json['uuid'].must_equal @vars1[:uuid]
+      json['username'].must_equal @vars1[:username]
+      json['userkey'].must_equal @vars1[:userkey]
+      json['title'].must_equal @vars1[:title]
+      json['blurb'].must_equal @vars1[:blurb]
+      json['sourcefile'].must_equal @vars1[:sourcefile]
+      json['callbackurl'].must_equal @vars1[:callbackurl]
+    end
+
+    it "builds well formed xml" do
+      @me.format = 'xml'
+      xml = @me.build_request
+      xml.must_include "<uuid>#{@vars1[:uuid]}</uuid>"
+      xml.must_include "<username>#{@vars1[:username]}</username>"
+      xml.must_include "<userkey>#{@vars1[:userkey]}</userkey>"
+      xml.must_include "<title>#{@vars1[:title]}</title>"
+      xml.must_include "<blurb>#{@vars1[:blurb]}</blurb>"
+      xml.must_include "<sourcefile>#{@vars1[:sourcefile]}</sourcefile>"
+      xml.must_include "<callbackurl>#{@vars1[:callbackurl]}</callbackurl>"
+    end
+
+    it "gets the details of an existing video using json" do
+      @me.get_details
+      @me.response.code.must_equal '200'
+      json_res = JSON.parse(@me.response.body)
+      json_res['uuid'].must_equal @vars1[:uuid]
+    end
+
+    it "gets the details of an existing video using xml" do
+      @me.format = 'xml'
+      @me.get_details
+      @me.response.code.must_equal '200'
+      @me.response.body.must_include "<uuid>#{@vars1[:uuid]}</uuid>"
+    end
+
   end
 
 end
