@@ -15,8 +15,7 @@
 
 #-- wrap the whole library in a module to enforce namespace
 module MoovAtom
-  API_URL_V1  = 'https://moovatom.com/api/api_request'
-  API_URL_V2  = 'https://www.moovatom.com/api/v2'
+  API_URL  = 'https://www.moovatom.com/api/v2'
   
   class MoovEngine
     attr_reader :response, :action
@@ -78,7 +77,7 @@ module MoovAtom
     #
 
     def get_details(attrs={}, &block)
-      @action = 'details'
+      @action = 'detail'
       attrs.each {|k,v| instance_variable_set "@#{k}", v}
       yield self if block_given?
     end #-- get_details method
@@ -127,13 +126,17 @@ module MoovAtom
     end #-- build_xml_request method
     
     # Sends the XML object to the MoovAtom servers
-    def send_xml_request(xml, url = MoovAtom::API_URL_V2)
-      uri = URI.parse(url)
+    def send_request(req)
+      uri = URI.parse("#{MoovAtom::API_URL}/#{@action}.#{@format}")
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      response = http.post(uri.request_uri, "xml=#{URI.escape(xml)}")
-    end #-- send_xml_request method
+      if @format == "json"
+        http.post(uri.request_uri, "json=#{URI.escape(req)}")
+      else
+        http.post(uri.request_uri, "xml=#{URI.escape(req)}")
+      end
+    end #-- send_request method
     
   end #-- MoovEngine class
   
