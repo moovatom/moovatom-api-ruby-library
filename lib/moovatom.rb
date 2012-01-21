@@ -107,12 +107,10 @@ module MoovAtom
       @action = 'cancel'
     end #-- cancel method
     
-    private
-    
     # Creates the XML object that is post'd to the MoovAtom servers
     def build_request
       if @format == "json"
-        JSON.generate ['{
+        {
           uuid: @uuid,
           username: @username,
           userkey: @userkey,
@@ -121,7 +119,7 @@ module MoovAtom
           blurb: @blurb,
           sourcefile: @sourcefile,
           callbackurl: @callbackurl
-        }']
+        }.to_json
       else
         b = Builder::XmlMarkup.new
         b.instruct!
