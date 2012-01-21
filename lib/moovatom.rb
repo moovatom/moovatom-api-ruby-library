@@ -128,7 +128,7 @@ module MoovAtom
           r.callbackurl(@callbackurl)
         end
       end
-    end #-- build_xml_request method
+    end #-- build_request method
     
     # Sends the XML object to the MoovAtom servers
     def send_request(req)
