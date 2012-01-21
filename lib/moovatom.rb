@@ -80,6 +80,7 @@ module MoovAtom
       @action = 'detail'
       attrs.each {|k,v| instance_variable_set "@#{k}", v}
       yield self if block_given?
+      @response = send_request(build_request)
     end #-- get_details method
     
     ##
@@ -109,19 +110,23 @@ module MoovAtom
     private
     
     # Creates the XML object that is post'd to the MoovAtom servers
-    def build_xml_request
-      b = Builder::XmlMarkup.new
-      b.instruct!
-      xml = b.request do |r|
-        r.uuid(@uuid)
-        r.username(@username)
-        r.userkey(@userkey)
-        r.action(@action)
-        r.content_type(@content_type)
-        r.title(@title)
-        r.blurb(@blurb)
-        r.sourcefile(@sourcefile)
-        r.callbackurl(@callbackurl)
+    def build_request
+      if @format == "json"
+
+      else
+        b = Builder::XmlMarkup.new
+        b.instruct!
+        xml = b.request do |r|
+          r.uuid(@uuid)
+          r.username(@username)
+          r.userkey(@userkey)
+          r.action(@action)
+          r.content_type(@content_type)
+          r.title(@title)
+          r.blurb(@blurb)
+          r.sourcefile(@sourcefile)
+          r.callbackurl(@callbackurl)
+        end
       end
     end #-- build_xml_request method
     
