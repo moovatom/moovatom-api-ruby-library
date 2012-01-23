@@ -107,7 +107,9 @@ module MoovAtom
       @action = 'cancel'
     end #-- cancel method
     
-    # Creates the XML object that is post'd to the MoovAtom servers
+    # This method uses the values stored in each instance variable to create
+    # either the json or xml request that gets POST'd to the Moovatom servers
+    # through the send_request() method below.
     def build_request
       if @format == "json"
         {
@@ -137,7 +139,9 @@ module MoovAtom
       end
     end #-- build_request method
     
-    # Sends the XML object to the MoovAtom servers
+    # This method takes the response from the build_request() method and POST's
+    # it to the Moovatom servers. The response from Moovatom is returned when
+    # the method finishes.
     def send_request(req)
       uri = URI.parse("#{MoovAtom::API_URL}/#{@action}.#{@format}")
       http = Net::HTTP.new(uri.host, uri.port)
