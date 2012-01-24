@@ -58,24 +58,24 @@ etc...
 The object created in the code above isn't very useful though. A MoovEngine object created without any arguments will, however, receive a few default values. `@content_type` will be initialized with a value of 'video' and `@format` will be set to 'json'. The remaining 7 instance variables need to be set with the credentials for your Moovatom account and the specifics about the video you wish to control. Aside from creating an empty object, as we did above, I've tried to include as much flexibility as I could when it comes to creating a new MoovEngine object. You can pass a hash to the initialize method containing the values you wish to be set. Any hash values that do not exist as instance variables will be ignored.
 
 ```ruby
-me = MoovAtom::MoovEngine.new(uuid: '123', username: 'USERNAME', userkey: 123456789, etc...)
+me = MoovAtom::MoovEngine.new(uuid: 'j9i8h7g6f5e4d3c2b1a', username: 'USERNAME', userkey: 'a1b2c3d4e5f6g7h8i9j', etc...)
 ```
 
-The initialize method will iterate over the hash and set each instance variable to the value you provide. You can supply numbers as regular numbers or as strings, the gem will convert all numbers to strings so they are formatted properly when sent to the Moovatom servers. In addition to supplying a hash you can also pass a block:
+The initialize method will iterate over the hash and set each instance variable to the value you provide. In addition to supplying a hash you can also pass a block:
 
 ```ruby
 me = MoovAtom::MoovEngine.new do |me|
-  me.uuid = 123
+  me.uuid = 'j9i8h7g6f5e4d3c2b1a'
   me.username = 'USERNAME'
-  me.userkey = '123456789'
+  me.userkey = 'a1b2c3d4e5f6g7h8i9j'
   etc...
 end
 ```
 
-The initialize method yields _itself_ giving the block access to the internal state of your new MoovEngine object. Because the hash arguments are processed first you can also combine both techniques for maximum flexibility:
+The initialize method yields _self_ giving the block access to the internal state of your new MoovEngine object. Because the hash arguments are processed first you can also combine both techniques for maximum flexibility:
 
 ```ruby
-me = MoovAtom::MoovEngine.new(uuid: '123', username: 'USERNAME', userkey: 123456789) do |me|
+me = MoovAtom::MoovEngine.new(uuid: 'j9i8h7g6f5e4d3c2b1a', username: 'USERNAME', userkey: 'a1b2c3d4e5f6g7h8i9j') do |me|
   me.title = 'Dolphin Training'
   me.blurb = 'How to train your dolphin like a pro.'
   me.sourcefile = 'http://example.com/dolphin.mp4'
