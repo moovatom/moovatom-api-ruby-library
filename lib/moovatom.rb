@@ -162,9 +162,9 @@ module MoovAtom
     def build_request
       if @format == "json"
         {
-          uuid: @uuid.to_s,
+          uuid: @uuid,
           username: @username,
-          userkey: @userkey.to_s,
+          userkey: @userkey,
           content_type: @content_type,
           title: @title,
           blurb: @blurb,
@@ -175,9 +175,9 @@ module MoovAtom
         b = Builder::XmlMarkup.new
         b.instruct!
         xml = b.request do |r|
-          r.uuid(@uuid.to_s)
+          r.uuid(@uuid)
           r.username(@username)
-          r.userkey(@userkey.to_s)
+          r.userkey(@userkey)
           r.action(@action)
           r.content_type(@content_type)
           r.title(@title)
