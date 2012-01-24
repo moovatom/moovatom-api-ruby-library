@@ -75,7 +75,8 @@ end
 The initialize method yields _self_ giving the block access to the internal state of your new MoovEngine object. Because the hash arguments are processed first you can also combine both techniques for maximum flexibility:
 
 ```ruby
-me = MoovAtom::MoovEngine.new(uuid: 'j9i8h7g6f5e4d3c2b1a', username: 'USERNAME', userkey: 'a1b2c3d4e5f6g7h8i9j') do |me|
+me = MoovAtom::MoovEngine.new(uuid: 'j9i8h7g6f5e4d3c2b1a', username: 'USERNAME') do |me|
+  me.userkey = 'a1b2c3d4e5f6g7h8i9j'
   me.title = 'Dolphin Training'
   me.blurb = 'How to train your dolphin like a pro.'
   me.sourcefile = 'http://example.com/dolphin.mp4'
