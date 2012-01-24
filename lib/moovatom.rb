@@ -136,16 +136,23 @@ module MoovAtom
     end #-- encode method
     
     ##
-    #
-    #
+    # The cancel() method allows you to cancel a video currently being encoded
+    # by the Moovatom servers. It is almost identical to the get_details() and
+    # get_status() methods. You can pass the same type/combination of arguments
+    # and it also sets the @action instance variable to 'cancel' for you.
 
-    def cancel()
+    def cancel(attrs={}, &block)
       @action = 'cancel'
+      attrs.each {|k,v| instance_variable_set "@#{k}", v}
+      yield self if block_given?
+      @response = send_request(build_request)
     end #-- cancel method
     
+    ##
     # This method uses the values stored in each instance variable to create
     # either the json or xml request that gets POST'd to the Moovatom servers
     # through the send_request() method below.
+    
     def build_request
       if @format == "json"
         {
@@ -175,9 +182,11 @@ module MoovAtom
       end
     end #-- build_request method
     
-    # This method takes the response from the build_request() method and POST's
-    # it to the Moovatom servers. The response from Moovatom is returned when
-    # the method finishes.
+    ##
+    # This method takes the request object (either json or xml) that's
+    # genreated by the build_request() method and POST's it to the Moovatom
+    # servers. The response from Moovatom is returned when the method finishes.
+
     def send_request(req)
       uri = URI.parse("#{MoovAtom::API_URL}/#{@action}.#{@format}")
       http = Net::HTTP.new(uri.host, uri.port)
