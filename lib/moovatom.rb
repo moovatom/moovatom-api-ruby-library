@@ -18,7 +18,7 @@ module MoovAtom
   API_URL  = 'https://www.moovatom.com/api/v2'
   
   class MoovEngine
-    attr_reader :response, :action
+    attr_reader   :response, :action
     attr_accessor :uuid, :username, :userkey, :content_type, :title, :blurb,
                   :sourcefile, :callbackurl, :format
     
@@ -114,8 +114,11 @@ module MoovAtom
     end #-- get_details method
     
     ##
-    #
-    #
+    # The get_status() method is almost identical to the get_details() method.
+    # It also accepts the same type/combination of arguments and sets the
+    # @action instance variable to 'status' for you. The main difference is
+    # that you will receive either a success or error status response from
+    # Moovatom's servers corresponding to the video of the uuid provided.
 
     def get_status(attrs={}, &block)
       @action = 'status'
