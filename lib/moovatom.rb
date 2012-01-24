@@ -156,8 +156,7 @@ module MoovAtom
     ##
     # This method uses the values stored in each instance variable to create
     # either the json or xml request that gets POST'd to the Moovatom servers
-    # through the send_request() method below. It also ensures that numbers are
-    # formatted as strings when sent to Moovatom.
+    # through the send_request() method below.
     
     def build_request
       if @format == "json"
