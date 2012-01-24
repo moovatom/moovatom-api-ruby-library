@@ -11,7 +11,7 @@
 # License:: MIT
 
 #-- required gems/libraries
-%w[net/https rexml/document builder uri json].each { |item| require item }
+%w[net/https builder uri json].each { |item| require item }
 
 #-- wrap the whole library in a module to enforce namespace
 module MoovAtom
