@@ -66,7 +66,7 @@ module MoovAtom
     # set to json by default. @content_type will default to 'video'.
     
     def initialize(attrs={}, &block)
-      attrs.each {|k,v| instance_variable_set "@#{k}", v.to_s}
+      attrs.each {|k,v| instance_variable_set "@#{k}", v}
       yield self if block_given?
       @content_type = 'video' if @content_type.nil?
       @format = 'json' if @format.nil?
@@ -108,7 +108,7 @@ module MoovAtom
 
     def get_details(attrs={}, &block)
       @action = 'detail'
-      attrs.each {|k,v| instance_variable_set "@#{k}", v.to_s}
+      attrs.each {|k,v| instance_variable_set "@#{k}", v}
       yield self if block_given?
       @response = send_request(build_request)
     end #-- get_details method
@@ -122,7 +122,7 @@ module MoovAtom
 
     def get_status(attrs={}, &block)
       @action = 'status'
-      attrs.each {|k,v| instance_variable_set "@#{k}", v.to_s}
+      attrs.each {|k,v| instance_variable_set "@#{k}", v}
       yield self if block_given?
       @response = send_request(build_request)
     end #-- end get_status method
@@ -135,7 +135,7 @@ module MoovAtom
 
     def encode(attrs={}, &block)
       @action = 'encode'
-      attrs.each {|k,v| instance_variable_set "@#{k}", v.to_s}
+      attrs.each {|k,v| instance_variable_set "@#{k}", v}
       yield self if block_given?
       @response = send_request(build_request)
     end #-- encode method
@@ -148,7 +148,7 @@ module MoovAtom
 
     def cancel(attrs={}, &block)
       @action = 'cancel'
-      attrs.each {|k,v| instance_variable_set "@#{k}", v.to_s}
+      attrs.each {|k,v| instance_variable_set "@#{k}", v}
       yield self if block_given?
       @response = send_request(build_request)
     end #-- cancel method
@@ -156,7 +156,8 @@ module MoovAtom
     ##
     # This method uses the values stored in each instance variable to create
     # either the json or xml request that gets POST'd to the Moovatom servers
-    # through the send_request() method below.
+    # through the send_request() method below. It also ensures that numbers are
+    # formatted as strings when sent to Moovatom.
     
     def build_request
       if @format == "json"
