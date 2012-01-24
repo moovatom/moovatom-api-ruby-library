@@ -15,7 +15,7 @@ Installing the gem is done through the usual `gem install moovatom` command, or 
 gem "moovatom", "~> 0.2.0"
 ```
 
-The entire library is wrapped in a module named MoovAtom. Inside that module there is a single class named MoovEngine. This class defines one constant and 11 instance variables. The constant `API_URL` defines the URL to which the JSON or XML requests must be POST'd. The 11 instance variables are:
+The entire library is wrapped in a module named MoovAtom. Inside that module is a single class named MoovEngine. This class defines one constant, 11 instance variables and 4 RESTful action methods. The constant `API_URL` defines the URL to which the JSON or XML requests must be POST'd. The 11 instance variables are:
 
 1. `@response`
 2. `@action`
@@ -29,7 +29,7 @@ The entire library is wrapped in a module named MoovAtom. Inside that module the
 10. `@callbackurl`
 11. `@format`
 
-The first 2 are readable only. `@response` will always contain the last response received from the Moovatom servers and `@action` will be set by each of the RESTful action methods explained below. The remaining 9 instance variables are writeable and correspond to the attributes of the video you want to control as well as your specific Moovatom account credentials. These attributes can be set in a number of ways depending on the needs of your specific application.
+The first 2 are readable only. `@response` will always contain the last response received from the Moovatom servers and `@action` will be set by each of the RESTful action methods explained below. The remaining 9 instance variables are writeable and correspond to the attributes of the video you want to control as well as your specific Moovatom account credentials. These attributes can be set in a number of ways depending upon the needs of your specific application.
 
 Instantiating a new (empty) object to communicate with the MoovAtom API is as simple as:
 
@@ -46,11 +46,11 @@ include MoovAtom
 
 me1 = MoovEngine.new
 
-...1,000's of lines of code...
+...thousands of lines of code...
 
 me2 = MoovEngine.new
 
-...1,000's of lines of code...
+...thousands of lines of code...
 
 etc...
 ```
@@ -72,7 +72,7 @@ me = MoovAtom::MoovEngine.new do |me|
 end
 ```
 
-The initialize method yields _itself_ giving the block access to the internal state of your new MoovEngine object. Because the hash arguments are processed first you can combine both techniques for maximum flexibility:
+The initialize method yields _itself_ giving the block access to the internal state of your new MoovEngine object. Because the hash arguments are processed first you can also combine both techniques for maximum flexibility:
 
 ```ruby
 me = MoovAtom::MoovEngine.new(uuid: '123', username: 'USERNAME', userkey: 123456789) do |me|
