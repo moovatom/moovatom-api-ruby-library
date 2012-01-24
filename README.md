@@ -1,3 +1,5 @@
+![Moovatom Logo](http://www.moovatom.com/static/img/site_images/moovatom_logo.png)
+
 Overview
 ========
 This gem provides access to the Moovatom online video processing and streaming service. It provides all the necessary attributes and methods for:
