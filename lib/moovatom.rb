@@ -73,8 +73,38 @@ module MoovAtom
     end #-- initialize method
     
     ##
+    # The get_details() method is responsible for communicating the details
+    # about a video that has completed encoding on Moovatom's servers. It is
+    # capable of accepting the same types and combinations of arguments as the
+    # initialize method. You can pass a hash of attributes and/or supply a
+    # block to update the internal state of the MoovEngine object prior to
+    # requesting the details of an existing video. This method sets the
+    # instance variable @action to 'detail' for you.
     #
+    # It uses a combination of the build_request and send_request methods to
+    # assign the response from the Moovatom servers to the @response instance
+    # variable. The return value of the build_request method is passed to the
+    # send_request method, the return value will be the "raw"
+    # Net::HTTP::Response object from Moovatom. This means you have access to
+    # all the specific response details corresponding to the most recent
+    # request available through @response.
     #
+    # This allows you to check for specific attributes of the response before
+    # using the content returned:
+    #
+    #   me = MoovAtom::MoovEngine.new do |me|
+    #     me.uuid = "uuid"
+    #     me.username = "username"
+    #     me.userkey = "userkey"
+    #   end
+    #
+    #   me.get_details
+    #
+    #   if me.response.code == 200
+    #     "...do something with me.response.body..."
+    #   else
+    #     "EPIC FAIL"
+    #   end
 
     def get_details(attrs={}, &block)
       @action = 'detail'
