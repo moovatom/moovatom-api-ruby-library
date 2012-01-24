@@ -128,11 +128,16 @@ module MoovAtom
     end #-- end get_status method
     
     ##
-    #
-    #
+    # The encode() method allows you to start a new encoding on Moovatom's
+    # servers. It is almost identical to the get_details() and get_status()
+    # methods. You can pass the same type/combination of arguments and it also
+    # sets the @action instance variable to 'encode' for you.
 
-    def encode
+    def encode(attrs={}, &block)
       @action = 'encode'
+      attrs.each {|k,v| instance_variable_set "@#{k}", v}
+      yield self if block_given?
+      @response = send_request(build_request)
     end #-- encode method
     
     ##
