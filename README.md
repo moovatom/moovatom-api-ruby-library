@@ -83,6 +83,8 @@ me = MoovAtom::MoovEngine.new(uuid: '123', username: 'USERNAME', userkey: 123456
 end
 ```
 
+The gem has been designed to be highly customizable. You are free to create a single instance and reuse it throughout your code, changing the attributes each time you need to work with a different video, or multiple instances representing individual videos if that's what your application requires, it's completely up to you. The next 4 sections discuss how to use your MoovEngine object(s) to control the videos you've uploaded to Moovatom.
+
 Encoding
 ========
 
