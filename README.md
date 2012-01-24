@@ -1,235 +1,107 @@
-Introduction
-============
-
-[MoovAtom](http://moovatom.com/) is an online video conversion and streaming service. The service insulates your videos from competitor's ads or links to inappropriate content. It offers customizable players that support hot linkable watermarks in addition to stream paths to your own player so you can control your videos, and your brand, on your own terms. Streaming is supported to all Apple mobile devices as well as most Android and Blackberry platforms. A unique QR Code is generated for each video for use in advertisements, allowing your viewers to simply "scan and play" your content. Advanced analytics and metrics provide valuable incite into how your viewers are watching your videos. The MoovAtom servers support both FTP access and direct uploads so huge file sizes are easy to handle. MoovAtom makes it easy to protect your copyrights, the streaming servers provide unparalleled protection over other services using progressive downloads to a user's browser cache.
-
-
-API
-===
-
-[MoovEngine](http://www.moovatom.com/support/api/1.0) is the API interface to MoovAtom's servers and your video content. This library has been written to provide an easier interface for Ruby and Rails developers. The MoovAtom API utilizes a RESTful XML implementation. Simple XML requests are posted to MoovAtom's servers and XML responses are returned containing the various details about and status of your videos.
-
-
 Overview
 ========
-This library is wrapped in a module named MoovAtom. Inside the module there is a single class named MoovEngine. So to instantiate a new object to communicate with the MoovAtom API you simply need to call:
+This gem provides access to the Moovatom online video processing and streaming service. It provides all the necessary attributes and methods for:
+
+1. Starting a new video encoding process
+2. Getting the status of a current encoding
+3. Getting the details of a completed encoding
+4. Canceling an encoding job
+
+Installing the gem is done through the usual `gem install moovatom` command, or by adding the following line to your project's Gemfile:
 
 ```
-require 'moovatom'  
-new_conn = MoovAtom::MoovEngine.new
+gem "moovatom", "~> 0.2.0"
 ```
 
-Of course you can also simplify that code by using:
+The entire library is wrapped in a module named MoovAtom. Inside that module there is a single class named MoovEngine. This class defines one constant and 11 instance variables. The constant `API_URL` defines the URL to which the JSON or XML requests must be POST'd. The 11 instance variables are:
 
-```
-require 'moovatom'  
-include MoovAtom  
-new_conn = MoovEngine.new
-```
+1. `@response`
+2. `@action`
+3. `@uuid`
+4. `@username`
+5. `@userkey`
+6. `@content_type`
+7. `@title`
+8. `@blurb`
+9. `@sourcefile`
+10. `@callbackurl`
+11. `@format`
 
-This code allows you to create a new instance without needing to enter the module's scope each time.
+The first 2 are readable only. `@response` will always contain the last response received from the Moovatom servers and `@action` will be set by each of the RESTful action methods explained below. The remaining 9 instance variables are writeable and correspond to the attributes of the video you want to control as well as your specific Moovatom account credentials. These attributes can be set in a number of ways depending on the needs of your specific application.
 
-Installing the gem is as simple as `gem install moovatom`.
+Instantiating a new (empty) object to communicate with the MoovAtom API is as simple as:
 
-Or by adding the following line to your project's Gemfile:
-
-```
-gem "moovatom", "~>0.1.2"
-```
-
-There is a single module constant named `API_URL` that defines the URL to which the XML requests must be POST'd. There are eight writable instance variables and one readable variable. The single readable variable is `@xml_response`. It's responsible for holding the last response received from MoovAtom's servers. The other variables are as follows:
-
-1. `@guid`
-2. `@username`
-3. `@userkey`
-4. `@content_type`
-5. `@title`
-6. `@blurb`
-7. `@sourcefile`
-8. `@callbackurl`
-
-These variables are used to communicate details about your account and your videos to MoovAtom's servers. You can define and pass them to the initialize method or set them after an object has been created with the usual accessor 'dot' notation:
-
-```
-require 'moovatom'  
-include MoovAtom  
-args = { title: "My Super Video", sourcefile: "http://example.com/supervideo.mp4", etc... }  
-new_conn = MoovEngine.new args
+```ruby
+require 'moovatom'
+me = MoovAtom::MoovEngine.new
 ```
 
-Or...
+Of course you could simplify the above code if you plan on creating a lot of MoovEngine objects by including the MoovAtom module first:
 
+```ruby
+require 'moovatom'
+include MoovAtom
+
+me1 = MoovEngine.new
+
+...1,000's of lines of code...
+
+me2 = MoovEngine.new
+
+...1,000's of lines of code...
+
+etc...
 ```
-require 'moovatom'  
-include MoovAtom  
-new_conn = MoovEngine.new  
-new_conn.title = "My Super Video"  
-new_conn.sourcefile = "http://example.com/supervideo.mp4"
+
+The object created in the code above isn't very useful though. A MoovEngine object created without any arguments will, however, receive a few default values. `@content_type` will be initialized with a value of 'video' and `@format` will be set to 'json'. The remaining 7 instance variables need to be set with the credentials for your Moovatom account and the specifics about the video you wish to control. Aside from creating an empty object, as we did above, I've tried to include as much flexibility as I could when it comes to creating a new MoovEngine object. You can pass a hash to the initialize method containing the values you wish to be set. Any hash values that do not exist as instance variables will be ignored.
+
+```ruby
+me = MoovAtom::MoovEngine.new(uuid: '123', username: 'USERNAME', userkey: 123456789, etc...)
+```
+
+The initialize method will iterate over the hash and set each instance variable to the value you provide. You can supply numbers as regular numbers or as strings, the gem will convert all numbers to strings so they are formatted properly when sent to the Moovatom servers. In addition to supplying a hash you can also pass a block:
+
+```ruby
+me = MoovAtom::MoovEngine.new do |me|
+  me.uuid = 123
+  me.username = 'USERNAME'
+  me.userkey = '123456789'
+  etc...
+end
+```
+
+The initialize method yields _itself_ giving the block access to the internal state of your new MoovEngine object. Because the hash arguments are processed first you can combine both techniques for maximum flexibility:
+
+```ruby
+me = MoovAtom::MoovEngine.new(uuid: '123', username: 'USERNAME', userkey: 123456789) do |me|
+  me.title = 'Dolphin Training'
+  me.blurb = 'How to train your dolphin like a pro.'
+  me.sourcefile = 'http://example.com/dolphin.mp4'
+  me.callbackurl = 'http://example.com/moovatom_callback'
+end
 ```
 
 Encoding
 ========
-To start a new encoding on Moovatom's servers you need to create a `MoovAtom::MoovEngine` object populated with the following information:
-
-```
-new_conn = MoovAtom::MoovEngine.new
-
-new_conn.username = "MOOVATOM_USERNAME"
-new_conn.userkey = "MOOVATOM_USERKEY"
-new_conn.title = "The Greatest Movie Ever"
-new_conn.blurb = "The gratest movie ever made!"
-new_conn.sourcefile = "http://example.com/greatest_movie_ever.mp4"
-new_conn.callbackurl = "/moovatom_callback"
-
-response = new_conn.encode
-```
-
-The video you want to submit to Moovatom must be placed in a publicly accessible location. You should map the callback url to a controller that stores the uuid returned by the Moovatom servers into your database. You can use that uuid in the remaining request methods to access that specific encoding. Future versions of the gem will accept a block when instantiating a MoovEngine object.
 
 Status
 ======
-To retrieve the status of an existing encoding on Moovatom's servers you need a `MoovAtom::MoovEngine` object populated with the following information:
-
-```
-new_conn = MoovAtom::MoovEngine.new
-
-new_conn.username = "MOOVATOM_USERNAME"
-new_conn.userkey = "MOOVATOM_USERKEY"
-new_conn.uuid = "UUID_OF_VIDEO"
-
-response = new_conn.status
-```
-
-The Moovatom servers will respond one of two ways:
-
-Success:
-
-```
-<?xml version="1.0"?>      
-<response>
-  <uuid>UUID</uuid>
-  <processing>True</processing>
-  <percent_complete>75</percent_complete>
-  <error></error>
-</response>
-```
-
-Error:
-
-```
-<?xml version="1.0"?>    
-<response>
-  <uuid>UUID</uuid>
-  <processing>False</processing>
-  <percent_complete>100</percent_complete>
-  <error>This was not a recognized format.</error>
-</response>  
-```
 
 Details
 =======
-When you need to get the details about an encoding that has finished on Moovatom's server you need a `MoovAtom::MoovEngine` object populated with the following information:
-
-```
-new_conn = MoovAtom::MoovEngine.new
-
-new_conn.username = "MOOVATOM_USERNAME"
-new_conn.userkey = "MOOVATOM_USERKEY"
-new_conn.uuid = "UUID_OF_VIDEO"
-
-response = new_conn.details
-```
-
-The response from a request for details contains the same information returned to the `@callbackurl` when an encoding completes:
-
-```
-<?xml version="1.0"?>
-<response>
-    <uuid>UUID</uuid>
-    <media_type>video</media_type>
-    <embed_code>EMBED CODE IFRAME FOR SMART SWITCHING</embed_code>
-    <iframe_target>http://www.moovatom.com/media/embed/SHORTID</iframe_target>
-    <original_download>http://www.moovatom.com/media/download/orig/UUID</original_download>
-    <versions>
-        <version>
-            <name>mobile</name>
-            <type>video/mp4</type>
-            <holdframe_download>http://www.moovatom.com/PATH_TO_FILE</holdframe_download>
-            <thumbnail_download>http://www.moovatom.com/PATH_TO_FILE</thumbnail_download>
-            <holdframe_serve>http://static.moovatom.com/PATH_TO_FILE</holdframe_serve>
-            <thumbnail_serve>http://static.moovatom.com/PATH_TO_FILE</thumbnail_serve>
-            <rtmp_stream>rtmp://media.moovatom.com/PATH_TO_FILE</rtmp_stream>
-            <http_stream>http://media.moovatom.com:1935/PATH_TO_FILE</http_stream>
-            <rtsp_stream>rtsp://media.moovatom.com:1935/PATH_TO_FILE</rtsp_stream>
-            <download>http://www.moovatom.com/PATH_TO_FILE</download>
-        </version>
-        <version>
-            <name>small</name>
-            <type>video/mp4</type>
-            <holdframe_download>http://www.moovatom.com/PATH_TO_FILE</holdframe_download>
-            <thumbnail_download>http://www.moovatom.com/PATH_TO_FILE</thumbnail_download>
-            <holdframe_serve>http://static.moovatom.com/PATH_TO_FILE</holdframe_serve>
-            <thumbnail_serve>http://static.moovatom.com/PATH_TO_FILE</thumbnail_serve>
-            <rtmp_stream>rtmp://media.moovatom.com/PATH_TO_FILE</rtmp_stream>
-            <http_stream>http://media.moovatom.com:1935/PATH_TO_FILE</http_stream>
-            <rtsp_stream>rtsp://media.moovatom.com:1935/PATH_TO_FILE</rtsp_stream>
-            <download>http://www.moovatom.com/PATH_TO_FILE</download>
-        </version>
-        <version>
-            <name>medium</name>
-            <type>video/mp4</type>
-            <holdframe_download>http://www.moovatom.com/PATH_TO_FILE</holdframe_download>
-            <thumbnail_download>http://www.moovatom.com/PATH_TO_FILE</thumbnail_download>
-            <holdframe_serve>http://static.moovatom.com/PATH_TO_FILE</holdframe_serve>
-            <thumbnail_serve>http://static.moovatom.com/PATH_TO_FILE</thumbnail_serve>
-            <rtmp_stream>rtmp://media.moovatom.com/PATH_TO_FILE</rtmp_stream>
-            <http_stream>http://media.moovatom.com:1935/PATH_TO_FILE</http_stream>
-            <rtsp_stream>rtsp://media.moovatom.com:1935/PATH_TO_FILE</rtsp_stream>
-            <download>http://www.moovatom.com/PATH_TO_FILE</download>
-        </version>
-        <version>
-            <name>large</name>
-            <type>video/mp4</type>
-            <holdframe_download>http://www.moovatom.com/PATH_TO_FILE</holdframe_download>
-            <thumbnail_download>http://www.moovatom.com/PATH_TO_FILE</thumbnail_download>
-            <holdframe_serve>http://static.moovatom.com/PATH_TO_FILE</holdframe_serve>
-            <thumbnail_serve>http://static.moovatom.com/PATH_TO_FILE</thumbnail_serve>
-            <rtmp_stream>rtmp://media.moovatom.com/PATH_TO_FILE</rtmp_stream>
-            <http_stream>http://media.moovatom.com:1935/PATH_TO_FILE</http_stream>
-            <rtsp_stream>rtsp://media.moovatom.com:1935/PATH_TO_FILE</rtsp_stream>
-            <download>http://www.moovatom.com/PATH_TO_FILE</download>
-        </version>
-    </versions>
-</response>
-```
 
 Cancel
 ======
-To cancel an unfinished encoding on Moovatom's servers you need a `MoovAtom::MoovEngine` object populated with the following information:
-
-```
-new_conn = MoovAtom::MoovEngine.new
-
-new_conn.username = "MOOVATOM_USERNAME"
-new_conn.userkey = "MOOVATOM_USERKEY"
-new_conn.uuid = "UUID_OF_VIDEO"
-
-response = new_conn.cancel
-```
-
-A successful cancellation results in the following response:
-
-```
-<?xml version="1.0"?>   
-<response>
-  <uuid>UUID</uuid>
-  <message>This job was successfully cancelled.</message>
-</response>
-```
-
-For more specific instructions on using the Moovatom API please check the [documentation](http://www.moovatom.com/support/requests.html)
 
 Testing
 =======
-This gem uses [Minitest](https://github.com/seattlerb/minitest), [Turn](https://github.com/TwP/turn) and [Fakeweb](https://github.com/chrisk/fakeweb) to implement specs for each of the above four request methods.
+This gem uses [Minitest](https://github.com/seattlerb/minitest), [Turn](https://github.com/TwP/turn) and [Fakeweb](https://github.com/chrisk/fakeweb) to implement specs for each of the above four request methods, pretty colorized output and for mocking up a connection to the API.
+
+API
+===
+
+[MoovAtom](http://moovatom.com/) is an online video conversion and streaming service. The service insulates your videos from competitor's ads or links to inappropriate content. It offers customizable players that support hot linkable watermarks in addition to stream paths to your own player so you can control your videos, and your brand, on your own terms. Streaming is supported to all Apple mobile devices as well as most Android and Blackberry platforms. A unique QR Code is generated for each video for use in advertisements, allowing your viewers to simply "scan and play" your content. Advanced analytics and metrics provide valuable incite into how your viewers are watching your videos. The MoovAtom servers support both FTP access and direct uploads so huge file sizes are easy to handle. MoovAtom makes it easy to protect your copyrights, the streaming servers provide unparalleled protection over other services using progressive downloads to a user's browser cache.
+
+[MoovEngine](http://moovatom.com/support/v2/api.html) is the API interface to MoovAtom's servers and your video content. This library has been written to provide an easier interface for Ruby and Rails developers. The MoovAtom API utilizes a RESTful JSON or XML implementation. Simple requests are posted to MoovAtom's servers and responses are returned containing the various details about and status of your videos.
+
 
