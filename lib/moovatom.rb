@@ -87,9 +87,12 @@ module MoovAtom
     #
     #
 
-    def status()
+    def get_status(attrs={}, &block)
       @action = 'status'
-    end #-- end status method
+      attrs.each {|k,v| instance_variable_set "@#{k}", v}
+      yield self if block_given?
+      @response = send_request(build_request)
+    end #-- end get_status method
     
     ##
     #
