@@ -255,6 +255,12 @@ The example code above could potentially be the beginning of a controller that i
 
 This gem uses [Minitest](https://github.com/seattlerb/minitest), [Turn](https://github.com/TwP/turn) and [Fakeweb](https://github.com/chrisk/fakeweb) to implement specs for each of the above four request methods, pretty colorized output and for mocking up a connection to the API.
 
+The entire test suite is under the spec directory. The `spec_helper.rb` file contains the common testing code and gets required by each `*_spec.rb` file. There is one spec file (`init_spec.rb`) that tests all of the expected functionality related to initializing a new MoovEngine object. Each of the 4 action methods also has a single spec file dedicated to testing it's expected functionality. All API requests are mocked through [Fakeweb](https://github.com/chrisk/fakeweb) and the responses come from the files in the fixtures directory.
+
+The Rakefile's default task is 'minitest', which will load and execute all the `*_spec.rb` files in the spec directory. So a simple call to `rake` on the command line from inside the root project directory will run the entire test suite.
+
+This is the first Ruby project in which I started from a TDD/BDD design perspective. If anyone has a problem with the tests or sees areas where I can improve please [open an issue](https://github.com/humanshell/moovatom/issues) here so it can be discussed and everyone can learn a little. I really enjoyed creating tests that helped drive the design of the code. I'm sure there are *PLENTY* of areas in which I can improve.
+
 # Moovatom
 
 [MoovAtom](http://moovatom.com/) is an online video conversion and streaming service. The service insulates your videos from competitor's ads or links to inappropriate content. It offers customizable players that support hot linkable watermarks in addition to stream paths to your own player so you can control your videos, and your brand, on your own terms. Streaming is supported to all Apple mobile devices as well as most Android and Blackberry platforms. A unique QR Code is generated for each video for use in advertisements, allowing your viewers to simply "scan and play" your content. Advanced analytics and metrics provide valuable incite into how your viewers are watching your videos. The MoovAtom servers support both FTP access and direct uploads so huge file sizes are easy to handle. MoovAtom makes it easy to protect your copyrights, the streaming servers provide unparalleled protection over other services using progressive downloads to a user's browser cache.
