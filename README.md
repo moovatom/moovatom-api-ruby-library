@@ -251,7 +251,7 @@ The example code above could potentially be the beginning of a controller that i
 
 ## Cancel
 
-If you decide, for whatever reason, that you no longer need or want a specific video on Moovatom you can cancel its encoding anytime before it finishes using the `cancel()` method. A cancel request will POST the uuid, username and userkey instance variables from your MoovEngine object using the `build_request()` and `send_request()` methods. The body of the Moovatom response will contain a message telling you whether or not you successfully cancelled your video:
+If you decide, for whatever reason, that you no longer need or want a specific video on Moovatom you can cancel its encoding anytime __before it finishes__ using the `cancel()` method. A cancel request will POST the uuid, username and userkey instance variables from your MoovEngine object using the `build_request()` and `send_request()` methods. The body of the Moovatom response will contain a message telling you whether or not you successfully cancelled your video:
 
 ```ruby
 me = MoovAtom::MoovEngine.new do |me|
@@ -281,6 +281,8 @@ end
     "message": "This job was successfully cancelled."
 }
 ```
+
+*__NOTE:__ There is currently no way to delete a video from your Moovatom account that has completed encoding without manually logging in and delete the it yourself. The ability to delete through the API will be available in future versions of the API.*
 
 # Testing
 
