@@ -282,7 +282,7 @@ end
 }
 ```
 
-*__NOTE:__ There is currently no way to delete a video from your Moovatom account that has completed encoding without manually logging in and delete the it yourself. The ability to delete through the API will be available in future versions of the API.*
+*__NOTE:__ There is currently no way to delete a video from your Moovatom account that has completed encoding without manually logging in and deleting it yourself. The ability to delete through the API will be available in the future.*
 
 # Testing
 
