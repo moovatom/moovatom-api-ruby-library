@@ -91,17 +91,17 @@ The gem has been designed to be highly customizable. You are free to create a si
 The MoovEngine class has 4 methods that have been designed to interact directly with the RESTful API implemented by Moovatom's servers:
 
 1. `get_details()` will return details about a video that has completed encoding
-2. `get_status()` will return the status of a video that is still encoding
+2. `get_status()` will return the status of a video (whether or not encoding has completed)
 3. `encode()` will start a new encoding job
-4. `cancel()` will cancel a running encoding job
+4. `cancel()` will cancel an unfinished encoding job
 
-Each of these methods are almost identical. They all accept the same hash/block argument syntax as the initialize method. This allows you to easily reuse a MoovEngine object to request information about different videos. The 4 action methods are able to be used and reused because they share 2 additional methods that handle the heavy lifting when it comes to building the request that will be sent to Moovatom and actually sending the request. These two methods are `build_request()` and `send_request()`. The first takes every instance variable and formats them as either a JSON or XML object (depending on the value of `@format`). The second is designed to take the object created by `build_request()` and POST it to the Moovatom servers. The return value of the `send_request()` method is a 'raw' Net::HTTP::Response object. This is again a design choice that leaves the customization up to your app. Any of the 4 action methods below will return this response object so you have access to everything returned from Moovatom.
+Each of these methods are almost identical. They all accept the same hash/block argument syntax as the initialize method. This allows you to easily reuse a MoovEngine object to request information about different videos. The 4 action methods are able to be used and reused because they share 2 additional methods that handle the heavy lifting when building and sending the request to Moovatom. These two methods are `build_request()` and `send_request()`. The first takes every instance variable and formats them as either a JSON or XML object (depending on the value of `@format`). The second is designed to take the object created by `build_request()` and POST it to the Moovatom servers. The return value of the `send_request()` method is a 'raw' Net::HTTP::Response object. This is again a design choice to leave the customization up to you and your app. Any of the 4 action methods below will return this response object so you have access to everything returned from Moovatom.
 
 For more specific information about the Moovatom API please see the [documentation](http://moovatom.com/support/v2/api.html).
 
 ## Details
 
-Getting the details of a video you've uploaded to your Moovatom account is as simple as creating a MoovEngine object, populating it with your credentials and the specifics of the movie you'd like to access:
+Getting the details of a video you've uploaded to your Moovatom account is as simple as creating a MoovEngine object and populating it with your credentials and the specifics of the movie you'd like to access:
 
 ```ruby
 me = MoovAtom::MoovEngine.new do |me|
@@ -120,7 +120,7 @@ else
 end
 ```
 
-A details request will POST the uuid, username and userkey instance variables from your MoovEngine object using the `build_request()` and `send_request()` methods. If successful the body of the Moovatom response will contain the details of the video idetified by the uuid set in your MoovEngine object:
+A details request will POST the uuid, username and userkey instance variables from your MoovEngine object using the `build_request()` and `send_request()` methods. If successful the body of the Moovatom response will contain the details of the video identified by the uuid set in your MoovEngine object:
 
 ```
 {
@@ -194,7 +194,7 @@ A details request will POST the uuid, username and userkey instance variables fr
 }
 ```
 
-With the Net::HTTP::Response object being stored in the `@response` instance variable after every call you are able to make decisions in your code based on the specific response received from Moovatom. In the example above we only find and update a specific video if the status code from Moovatom is 200 (or 'OK'). This code is just an example - it hasn't been tested in a Rails or Rack app.
+Because the Net::HTTP::Response object is stored in the `@response` instance variable after every call you are able to make decisions in your code based on the specific response received from Moovatom. In the example above we only find and update a specific video if the status code from Moovatom is 200 (or 'OK'). This code is just an example - it hasn't been tested in a Rails or Rack app.
 
 ## Status
 
@@ -221,7 +221,7 @@ else
 end
 ```
 
-A status request will POST the uuid, username and userkey instance variables from your MoovEngine object using the `build_request()` and `send_request()` methods. the body of the Moovatom response will contain either a success or error response:
+A status request will POST the uuid, username and userkey instance variables from your MoovEngine object using the `build_request()` and `send_request()` methods. The body of the Moovatom response will contain either a success or error response:
 
 *Status Success Response:*
 
@@ -245,7 +245,7 @@ A status request will POST the uuid, username and userkey instance variables fro
 }
 ```
 
-The example code above could potentially be the beginning of a controller that is responsible for showing videos. It can't display the details of a video that hasn't finished encoding so it uses `get_status()` to update the attributes of a video and then later on it can send a collection of those completed videos to a view. Again, this code is just an example - it hasn't been tested in Rails or Rack app.
+The example code above could potentially be the beginning of a controller that is responsible for showing videos. It can't display the details of a video that hasn't finished encoding so it uses `get_status()` to update the attributes of a video and then later on it can send a collection of those completed videos to a view. Again, this code is just an example - it hasn't been tested in a Rails or Rack app.
 
 ## Encode
 
