@@ -120,7 +120,9 @@ else
 end
 ```
 
-A details request will POST the uuid, username and userkey instance variables from your MoovEngine object using the `build_request()` and `send_request()` methods. If successful the body of the Moovatom response will contain the details of the video identified by the uuid set in your MoovEngine object:
+A details request will POST the uuid, username and userkey instance variables from your MoovEngine object using the `build_request()` and `send_request()` methods. If successful the body of the Moovatom response will contain the details of the video identified by the uuid set in your MoovEngine object.
+
+*Successful get_details() Response:*
 
 ```
 {
@@ -249,6 +251,34 @@ The example code above could potentially be the beginning of a controller that i
 
 ## Encode
 
+You can start a new encoding on the Moovatom servers through the `encode()` method.
+
+```ruby
+me = MoovAtom::MoovEngine.new(userkey: 'a1b2c3d4e5f6g7h8i9j', username: 'USERNAME') do |me|
+  me.title = 'Dolphin Training'
+  me.blurb = 'How to train your dolphin like a pro.'
+  me.sourcefile = 'http://example.com/dolphin.mp4'
+  me.callbackurl = 'http://example.com/moovatom_callback'
+end
+
+me.encode
+```
+
+An encode request will POST the username, userkey, content_type, title, blurb, sourcefile and callbackurl instance variables from your MoovEngine object using the `build_request()` and `send_request()` methods. The body of the Moovatom response will contain the uuid assigned by Moovatom's servers to this new video as well as a message stating your job was started successfully:
+
+*Encode Started Response:*
+
+```
+{
+    "uuid": "UUID",
+    "message": "Your job was started successfully."
+}
+```
+
+The encode RESTful action implemented on Moovatom's servers differs slightly from the other 3 RESTful actions. Once the encoding is complete Moovatom's servers will send a response to the call back URL you set in the `@callbackurl` instance variable. Your app should define a controller (or url handler if it's a [Sinatra](http://www.sinatrarb.com/) app) that will process these callbacks to save/update the video's details in your database. The body of the callback sent by Moovatom looks exactly like the response from a details request.
+
+For more specific information about the Moovatom API please see the [documentation](http://moovatom.com/support/v2/api.html).
+
 ## Cancel
 
 If you decide, for whatever reason, that you no longer need or want a specific video on Moovatom you can cancel its encoding anytime __before it finishes__ using the `cancel()` method. A cancel request will POST the uuid, username and userkey instance variables from your MoovEngine object using the `build_request()` and `send_request()` methods. The body of the Moovatom response will contain a message telling you whether or not you successfully cancelled your video:
@@ -288,7 +318,7 @@ end
 
 This gem uses [Minitest](https://github.com/seattlerb/minitest), [Turn](https://github.com/TwP/turn) and [Fakeweb](https://github.com/chrisk/fakeweb) to implement specs for each of the above four request methods, pretty colorized output and for mocking up a connection to the API.
 
-The entire test suite is under the spec directory. The `spec_helper.rb` file contains the common testing code and gets required by each `*_spec.rb` file. There is one spec file (`init_spec.rb`) that tests all of the expected functionality related to initializing a new MoovEngine object. Each of the 4 action methods also has a single spec file dedicated to testing it's expected functionality. All API requests are mocked through [Fakeweb](https://github.com/chrisk/fakeweb) and the responses come from the files in the fixtures directory.
+The entire test suite is under the spec directory. The `spec_helper.rb` file contains the common testing code and gets required by each `*_spec.rb` file. There is one spec file (`init_spec.rb`) that tests all of the expected functionality related to initializing a new MoovEngine object. Each of the 4 action methods also has a single spec file dedicated to testing its expected functionality. All API requests are mocked through [Fakeweb](https://github.com/chrisk/fakeweb) and the responses come from the files in the fixtures directory.
 
 The Rakefile's default task is 'minitest', which will load and execute all the `*_spec.rb` files in the spec directory. So a simple call to `rake` on the command line from the project's root directory will run the entire test suite.
 
