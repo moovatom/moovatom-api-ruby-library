@@ -277,6 +277,8 @@ An encode request will POST the username, userkey, content_type, title, blurb, s
 
 The encode RESTful action implemented on Moovatom's servers differs slightly from the other 3 RESTful actions. Once the encoding is complete Moovatom's servers will send a response to the call back URL you set in the `@callbackurl` instance variable. Your app should define a controller (or url handler if it's a [Sinatra](http://www.sinatrarb.com/) app) that will process these callbacks to save/update the video's details in your database. The body of the callback sent by Moovatom looks exactly like the response from a details request.
 
+Additionally, the video you are uploading to Moovatom should be in a publicly accessibly location. Moovatom will attempt to transfer that video from the url you define in the `@sourcefile` instance variable. The ability to upload a video directly is planned for a future version of the API and this gem.
+
 For more specific information about the Moovatom API please see the [documentation](http://moovatom.com/support/v2/api.html).
 
 ## Cancel
