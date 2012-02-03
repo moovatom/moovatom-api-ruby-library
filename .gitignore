@@ -5,3 +5,4 @@ pkg/*
 notes.txt
 .rvmrc
 doc/*
+.DS_Store
