@@ -36,7 +36,11 @@ describe MoovAtom::MoovEngine, "Cancel Request Unit Tests" do
   end
 
   after do
+    # clean up the registry after each test
     FakeWeb.clean_registry
+
+    # enable all real requests after testing
+    FakeWeb.allow_net_connect = true
   end
 
   it "accepts a hash to update internal variables" do
