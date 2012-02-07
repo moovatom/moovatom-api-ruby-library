@@ -198,6 +198,30 @@ module MoovAtom
         end
       end
     end #-- send_request method
+
+    ##
+    # Custom to_s method for pretty printing in console
+
+    def to_s
+      puts
+      35.times { print "*" }
+      puts
+      puts "Object ID:    #{self.object_id}"
+      puts "UUID:         #{@uuid}"
+      puts "Username:     #{@username}"
+      puts "Userkey:      #{@userkey}"
+      puts "Content Type: #{@content_type}"
+      puts "Title:        #{@title}"
+      puts "Blurb:        #{@blurb}"
+      puts "Source File:  #{@sourcefile}"
+      puts "Callback URL: #{@callbackurl}"
+      puts "Action:       #{@action}"
+      puts "Format:       #{@format}"
+      puts "Response:     #{@response.class}"
+      35.times { print "*" }
+      puts
+      puts
+    end
     
   end #-- MoovEngine class
   
