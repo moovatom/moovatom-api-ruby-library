@@ -43,7 +43,7 @@ describe MoovAtom::MoovEngine, "Encode Request Unit Tests" do
     FakeWeb.allow_net_connect = true
   end
 
-  it "accepts a hash to update internal variables" do
+  it "accepts a hash to update attributes" do
 
     # create a MoovEngine object using the values from the @vars1 hash
     me = MoovAtom::MoovEngine.new @vars1
@@ -61,7 +61,7 @@ describe MoovAtom::MoovEngine, "Encode Request Unit Tests" do
     me.callbackurl.must_equal @vars2[:callbackurl]
   end
 
-  it "accepts a block to update internal variables" do
+  it "accepts a block to update attributes" do
 
     # create a new MoovEngine object with a block using the values from @vars1
     me = MoovAtom::MoovEngine.new do |me|
@@ -96,7 +96,7 @@ describe MoovAtom::MoovEngine, "Encode Request Unit Tests" do
     me.callbackurl.must_equal @vars2[:callbackurl]
   end
 
-  it "sets the action instance variable to encode" do
+  it "sets the action attribute to encode" do
 
     # create a new MoovEngine object
     me = MoovAtom::MoovEngine.new @vars1

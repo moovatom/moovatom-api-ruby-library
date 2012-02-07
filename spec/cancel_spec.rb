@@ -43,7 +43,7 @@ describe MoovAtom::MoovEngine, "Cancel Request Unit Tests" do
     FakeWeb.allow_net_connect = true
   end
 
-  it "accepts a hash to update internal variables" do
+  it "accepts a hash to update attributes" do
 
     # create a MoovEngine object using the values from the @vars1 hash
     me = MoovAtom::MoovEngine.new @vars1
@@ -61,7 +61,7 @@ describe MoovAtom::MoovEngine, "Cancel Request Unit Tests" do
     me.callbackurl.must_equal @vars2[:callbackurl]
   end
 
-  it "accepts a block to update internal variables" do
+  it "accepts a block to update attributes" do
 
     # create a new MoovEngine object with a block using the values from @vars1
     me = MoovAtom::MoovEngine.new do |me|
@@ -96,7 +96,7 @@ describe MoovAtom::MoovEngine, "Cancel Request Unit Tests" do
     me.callbackurl.must_equal @vars2[:callbackurl]
   end
 
-  it "sets the action instance variable to cancel" do
+  it "sets the action attribute to cancel" do
 
     # create a new MoovEngine object
     me = MoovAtom::MoovEngine.new @vars1
@@ -111,12 +111,12 @@ describe MoovAtom::MoovEngine, "Cancel Request Unit Tests" do
   # tests for the api call to get details about an existing video
   describe "API Requests" do
 
-    it "cancels the encoding of an unfinished video using json" do
+    it "cancels encoding of a video using json" do
       @me.cancel
       @me.response["uuid"].must_equal @vars1[:uuid]
     end
 
-    it "cancels the encoding of an unfinished video using xml" do
+    it "cancels encoding of a video using xml" do
       @me.format = 'xml'
       @me.cancel
       @me.response.root.elements["uuid"].text.must_equal @vars1[:uuid]
