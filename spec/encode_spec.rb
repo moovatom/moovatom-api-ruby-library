@@ -111,34 +111,10 @@ describe MoovAtom::MoovEngine, "Encode Request Unit Tests" do
   # tests for the api call to get details about an existing video
   describe "API Requests" do
 
-    it "builds well formed json" do
-      json = JSON.parse @me.build_request
-      json['uuid'].must_equal @vars1[:uuid]
-      json['username'].must_equal @vars1[:username]
-      json['userkey'].must_equal @vars1[:userkey]
-      json['title'].must_equal @vars1[:title]
-      json['blurb'].must_equal @vars1[:blurb]
-      json['sourcefile'].must_equal @vars1[:sourcefile]
-      json['callbackurl'].must_equal @vars1[:callbackurl]
-    end
-
-    it "builds well formed xml" do
-      @me.format = 'xml'
-      xml = @me.build_request
-      xml.must_include "<uuid>#{@vars1[:uuid]}</uuid>"
-      xml.must_include "<username>#{@vars1[:username]}</username>"
-      xml.must_include "<userkey>#{@vars1[:userkey]}</userkey>"
-      xml.must_include "<title>#{@vars1[:title]}</title>"
-      xml.must_include "<blurb>#{@vars1[:blurb]}</blurb>"
-      xml.must_include "<sourcefile>#{@vars1[:sourcefile]}</sourcefile>"
-      xml.must_include "<callbackurl>#{@vars1[:callbackurl]}</callbackurl>"
-    end
-
     it "starts a new encoding using json" do
       @me.encode
       @me.response.code.must_equal '200'
-      json_res = JSON.parse(@me.response.body)
-      json_res['uuid'].must_equal @vars1[:uuid]
+      @me.response.body.must_include "\"uuid\": \"#{@vars1[:uuid]}\""
     end
 
     it "starts a new encoding using xml" do
