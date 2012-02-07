@@ -200,7 +200,7 @@ module MoovAtom
     end #-- send_request method
 
     ##
-    # Custom to_s method for pretty printing in console
+    # Custom to_s method for pretty printing in the console
 
     def to_s
       puts
