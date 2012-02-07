@@ -113,15 +113,13 @@ describe MoovAtom::MoovEngine, "Details Request Unit Tests" do
 
     it "gets the details of an existing video using json" do
       @me.get_details
-      @me.response.code.must_equal '200'
-      @me.response.body.must_include "\"uuid\": \"#{@vars1[:uuid]}\""
+      @me.response["uuid"].must_equal @vars1[:uuid]
     end
 
     it "gets the details of an existing video using xml" do
       @me.format = 'xml'
       @me.get_details
-      @me.response.code.must_equal '200'
-      @me.response.body.must_include "<uuid>#{@vars1[:uuid]}</uuid>"
+      @me.response.root.elements["uuid"].text.must_equal @vars1[:uuid]
     end
 
   end

@@ -113,15 +113,13 @@ describe MoovAtom::MoovEngine, "Cancel Request Unit Tests" do
 
     it "cancels the encoding of an unfinished video using json" do
       @me.cancel
-      @me.response.code.must_equal '200'
-      @me.response.body.must_include "\"uuid\": \"#{@vars1[:uuid]}\""
+      @me.response["uuid"].must_equal @vars1[:uuid]
     end
 
     it "cancels the encoding of an unfinished video using xml" do
       @me.format = 'xml'
       @me.cancel
-      @me.response.code.must_equal '200'
-      @me.response.body.must_include "<uuid>#{@vars1[:uuid]}</uuid>"
+      @me.response.root.elements["uuid"].text.must_equal @vars1[:uuid]
     end
 
   end

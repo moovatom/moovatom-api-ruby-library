@@ -52,7 +52,7 @@ describe MoovAtom::MoovEngine, "Encode Request Unit Tests" do
     me.encode @vars2
 
     # the instance 'me' should now contain the values from the @vars2 hash
-    me.uuid.must_equal @vars2[:uuid]
+    me.uuid.must_equal @vars1[:uuid]
     me.username.must_equal @vars2[:username]
     me.userkey.must_equal @vars2[:userkey]
     me.title.must_equal @vars2[:title]
@@ -87,7 +87,7 @@ describe MoovAtom::MoovEngine, "Encode Request Unit Tests" do
     end
 
     # the instance 'me' should now contain the values from the @vars2 hash
-    me.uuid.must_equal @vars2[:uuid]
+    me.uuid.must_equal @vars1[:uuid]
     me.username.must_equal @vars2[:username]
     me.userkey.must_equal @vars2[:userkey]
     me.title.must_equal @vars2[:title]
@@ -113,15 +113,13 @@ describe MoovAtom::MoovEngine, "Encode Request Unit Tests" do
 
     it "starts a new encoding using json" do
       @me.encode
-      @me.response.code.must_equal '200'
-      @me.response.body.must_include "\"uuid\": \"#{@vars1[:uuid]}\""
+      @me.response["uuid"].must_equal @vars1[:uuid]
     end
 
     it "starts a new encoding using xml" do
       @me.format = 'xml'
       @me.encode
-      @me.response.code.must_equal '200'
-      @me.response.body.must_include "<uuid>#{@vars1[:uuid]}</uuid>"
+      @me.response.root.elements["uuid"].text.must_equal @vars1[:uuid]
     end
 
   end

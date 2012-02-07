@@ -117,15 +117,13 @@ describe MoovAtom::MoovEngine, "Status Request Unit Tests" do
 
     it "gets the status of an existing video using json" do
       @me.get_status
-      @me.response.code.must_equal '200'
-      @me.response.body.must_include "\"uuid\": \"#{@vars1[:uuid]}\""
+      @me.response["uuid"].must_equal @vars1[:uuid]
     end
 
     it "gets the status of an existing video using xml" do
       @me.format = 'xml'
       @me.get_status
-      @me.response.code.must_equal '200'
-      @me.response.body.must_include "<uuid>#{@vars1[:uuid]}</uuid>"
+      @me.response.root.elements["uuid"].text.must_equal @vars1[:uuid]
     end
 
   end
