@@ -4,14 +4,14 @@
 # methods and functionality necessary for your app to communicate with that
 # interface.
 #
-# See README file for installation details and general usage information.
+# See README file for installation details and specific usage information.
 #
 # Author:: Dominic Giglio <mailto:humanshell@gmail.com>
 # Copyright:: Copyright (c) 2012 Dominic Giglio - All Rights Reserved
 # License:: MIT
 
 #-- required gems/libraries
-%w[net/https builder uri json].each { |item| require item }
+%w[net/http uri].each { |lib| require lib }
 
 #-- wrap the whole library in a module to enforce namespace
 module MoovAtom
@@ -28,19 +28,19 @@ module MoovAtom
     #
     # There are three ways to instantiate a new MoovEngine object:
     #
-    # Create a new blank object and set each variable using the traditional
-    # dot notation:
+    # 1.) Create a new blank object and set each variable using the traditional
+    # 'dot' notation:
     #
     #   me = MoovAtom::MoovEngine.new
     #   me.uuid = '123'
     #   me.username = 'jsmith'
     #   etc...
     # 
-    # Supply a hash of variables as an argument:
+    # 2.) Supply a hash of variables as an argument:
     #
     #   me = MoovAtom::MoovEngine.new(uuid: '123', username: 'jsmith', etc...)
     # 
-    # Use a block to set variables. The initialize method yields _self_ to
+    # 3.) Use a block to set variables. The initialize method yields _self_ to
     # the block given:
     #
     #   me = MoovAtom::MoovEngine.new do |me|
@@ -62,7 +62,7 @@ module MoovAtom
     # @response is readable because it contains the response from MoovAtom's
     # servers (xml or json). @action gets set in each of the request methods
     # below to correctly correspond with the actions you're asking MoovAtom to
-    # perform. @format allows you to use xml or json in your requests, it's
+    # perform. @format allows you to get xml or json in your responses, it's
     # set to json by default. @content_type will default to 'video'.
     
     def initialize(attrs={}, &block)
@@ -81,12 +81,10 @@ module MoovAtom
     # requesting the details of an existing video. This method sets the
     # instance variable @action to 'detail' for you.
     #
-    # It uses a combination of the build_request and send_request methods to
-    # assign the response from the Moovatom servers to the @response instance
-    # variable. The return value of the build_request method is passed to the
-    # send_request method, the return value will be the "raw"
-    # Net::HTTP::Response object from Moovatom. This means you have access to
-    # all the specific response details corresponding to the most recent
+    # It uses the send_request() method to assign the response from the Moovatom
+    # servers to the @response instance variable. The return value will be the
+    # "raw" Net::HTTP::Response object from Moovatom. This means you have access
+    # to all the specific response details corresponding to the most recent
     # request available through @response.
     #
     # This allows you to check for specific attributes of the response before
@@ -110,7 +108,7 @@ module MoovAtom
       @action = 'detail'
       attrs.each {|k,v| instance_variable_set "@#{k}", v}
       yield self if block_given?
-      @response = send_request(build_request)
+      @response = send_request()
     end #-- get_details method
     
     ##
@@ -124,7 +122,7 @@ module MoovAtom
       @action = 'status'
       attrs.each {|k,v| instance_variable_set "@#{k}", v}
       yield self if block_given?
-      @response = send_request(build_request)
+      @response = send_request()
     end #-- end get_status method
     
     ##
@@ -137,7 +135,7 @@ module MoovAtom
       @action = 'encode'
       attrs.each {|k,v| instance_variable_set "@#{k}", v}
       yield self if block_given?
-      @response = send_request(build_request)
+      @response = send_request()
     end #-- encode method
     
     ##
@@ -150,57 +148,37 @@ module MoovAtom
       @action = 'cancel'
       attrs.each {|k,v| instance_variable_set "@#{k}", v}
       yield self if block_given?
-      @response = send_request(build_request)
+      @response = send_request()
     end #-- cancel method
     
     ##
-    # This method uses the values stored in each instance variable to create
-    # either the json or xml request that gets POST'd to the Moovatom servers
-    # through the send_request() method below.
-    
-    def build_request
-      if @format == "json"
-        {
-          uuid: @uuid,
-          username: @username,
-          userkey: @userkey,
-          content_type: @content_type,
-          title: @title,
-          blurb: @blurb,
-          sourcefile: @sourcefile,
-          callbackurl: @callbackurl
-        }.to_json
-      else
-        b = Builder::XmlMarkup.new
-        b.instruct!
-        xml = b.request do |r|
-          r.uuid(@uuid)
-          r.username(@username)
-          r.userkey(@userkey)
-          r.action(@action)
-          r.content_type(@content_type)
-          r.title(@title)
-          r.blurb(@blurb)
-          r.sourcefile(@sourcefile)
-          r.callbackurl(@callbackurl)
-        end
-      end
-    end #-- build_request method
-    
-    ##
-    # This method takes the request object (either json or xml) that's
-    # genreated by the build_request() method and POST's it to the Moovatom
-    # servers. The response from Moovatom is returned when the method finishes.
+    # The send_request() method is responsible for POSTing the values stored in
+    # your object's instance variables to Moovatom. The response from Moovatom
+    # is returned when the method finishes.
 
-    def send_request(req)
-      uri = URI.parse("#{MoovAtom::API_URL}/#{@action}.#{@format}")
-      http = Net::HTTP.new(uri.host, uri.port)
+    def send_request()
+      data = {
+        uuid: @uuid,
+        username: @username,
+        userkey: @userkey,
+        content_type: @content_type,
+        title: @title,
+        blurb: @blurb,
+        sourcefile: @sourcefile,
+        callbackurl: @callbackurl
+      }
+
+      # create the connection object
+      uri = URI.parse "#{MoovAtom::API_URL}/#{@action}.#{@format}"
+      http = Net::HTTP.new uri.host, uri.port
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      if @format == "json"
-        http.post(uri.request_uri, "json=#{URI.escape(req)}")
-      else
-        http.post(uri.request_uri, "xml=#{URI.escape(req)}")
+
+      # open the connection and send request
+      http.start do |http|
+        req = Net::HTTP::Post.new(uri.request_uri)
+        req.set_form_data(data, '&')
+        http.request(req)
       end
     end #-- send_request method
     
