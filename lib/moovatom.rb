@@ -11,7 +11,7 @@
 # License:: MIT
 
 #-- required gems/libraries
-%w[net/http uri].each { |lib| require lib }
+%w[net/http uri rexml/document json].each { |lib| require lib }
 
 #-- wrap the whole library in a module to enforce namespace
 module MoovAtom
@@ -108,7 +108,7 @@ module MoovAtom
       @action = 'detail'
       attrs.each {|k,v| instance_variable_set "@#{k}", v}
       yield self if block_given?
-      @response = send_request()
+      send_request
     end #-- get_details method
     
     ##
@@ -122,7 +122,7 @@ module MoovAtom
       @action = 'status'
       attrs.each {|k,v| instance_variable_set "@#{k}", v}
       yield self if block_given?
-      @response = send_request()
+      send_request
     end #-- end get_status method
     
     ##
@@ -135,7 +135,14 @@ module MoovAtom
       @action = 'encode'
       attrs.each {|k,v| instance_variable_set "@#{k}", v}
       yield self if block_given?
-      @response = send_request()
+      send_request
+
+      case @response
+      when Hash
+        @uuid = @response["uuid"]
+      when REXML::Document
+        @uuid = @response.root.elements["uuid"].text
+      end
     end #-- encode method
     
     ##
@@ -148,7 +155,7 @@ module MoovAtom
       @action = 'cancel'
       attrs.each {|k,v| instance_variable_set "@#{k}", v}
       yield self if block_given?
-      @response = send_request()
+      send_request
     end #-- cancel method
     
     ##
@@ -156,7 +163,7 @@ module MoovAtom
     # your object's instance variables to Moovatom. The response from Moovatom
     # is returned when the method finishes.
 
-    def send_request()
+    def send_request
       data = {
         uuid: @uuid,
         username: @username,
@@ -178,7 +185,17 @@ module MoovAtom
       http.start do |http|
         req = Net::HTTP::Post.new(uri.request_uri)
         req.set_form_data(data, '&')
-        http.request(req)
+        @response = http.request(req)
+      end
+
+      # parse the response if request was successful
+      if @response.code == "200"
+        case @format
+        when "json"
+          @response = JSON.parse @response.body
+        when "xml"
+          @response = REXML::Document.new @response.body
+        end
       end
     end #-- send_request method
     
