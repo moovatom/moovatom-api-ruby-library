@@ -17,19 +17,19 @@ gem "moovatom", "~> 0.2.0"
 
 The entire library is wrapped in a module named MoovAtom. Inside that module is a single class named MoovEngine. This class defines one constant, 11 instance variables and 4 action methods that interact with Moovatom's RESTful API. The constant `API_URL` defines the URL to which the JSON or XML requests must be POST'd. The 11 instance variables are:
 
-1. `@response`
-2. `@action`
-3. `@uuid`
-4. `@username`
-5. `@userkey`
-6. `@content_type`
-7. `@title`
-8. `@blurb`
-9. `@sourcefile`
-10. `@callbackurl`
-11. `@format`
+1. `@uuid`
+2. `@username`
+3. `@userkey`
+4. `@content_type`
+5. `@title`
+6. `@blurb`
+7. `@sourcefile`
+8. `@callbackurl`
+9. `@format`
+10. `@action`
+11. `@response`
 
-The first 2 are readable only. `@response` will always contain the last response received from the Moovatom servers and `@action` will be set by each of the action methods explained below. The remaining 9 instance variables are writeable and correspond to the attributes of the video you want to control as well as your specific Moovatom account credentials. These attributes can be set in a number of ways depending upon the needs of your specific application.
+The last 2 are readable only. `@response` will always contain the last response received from the Moovatom servers and `@action` will be set by each of the action methods explained below. The remaining 9 instance variables are writeable and correspond to the attributes of the video you want to control as well as your specific Moovatom account credentials. These attributes can be set in a number of ways depending upon the needs of your specific application.
 
 Instantiating a new (empty) object to communicate with the MoovAtom API is as simple as:
 
@@ -90,12 +90,12 @@ The gem has been designed to be highly customizable. You are free to create a si
 
 The MoovEngine class has 4 methods that have been designed to interact directly with the RESTful API implemented by Moovatom's servers:
 
-1. `get_details()` will return details about a video that has completed encoding
+1. `get_details()` will return details about a video that has *completed* encoding
 2. `get_status()` will return the status of a video (whether or not encoding has completed)
 3. `encode()` will start a new encoding job
 4. `cancel()` will cancel an unfinished encoding job
 
-Each of these methods are almost identical. They all accept the same hash/block argument syntax as the initialize method. This allows you to easily reuse a MoovEngine object to request information about different videos. The 4 action methods are able to be used and reused because they share 2 additional methods that handle the heavy lifting when building and sending the request to Moovatom. These two methods are `build_request()` and `send_request()`. The first takes every instance variable and formats them as either a JSON or XML object (depending on the value of `@format`). The second is designed to take the object created by `build_request()` and POST it to the Moovatom servers. The return value of the `send_request()` method is a 'raw' Net::HTTP::Response object. This is again a design choice to leave the customization up to you and your app. Any of the 4 action methods below will return this response object so you have access to everything returned from Moovatom.
+Each of these methods are almost identical. They all accept the same hash/block argument syntax as the initialize method. This allows you to easily reuse a MoovEngine object to request information about different videos. The 4 action methods are able to be used and reused because they share a method that handles the heavy lifting when building and sending the request to Moovatom: `send_request()`. The `send_request()` method takes every instance variable and creates a hash of the key/value attributes for your video. It then uses the `@format` and `@action` instance variables to build and POST the appropriate request to the Moovatom servers. If the response is successful it will parse it into either JSON or XML and store it in the `@response` instance variable. If the response is anything other than "200 OK" the raw Net::HTTPResponse object will be passed through and stored in `@response`. This allows you and your app to determine how best to handle the situation.
 
 For more specific information about the Moovatom API please see the [documentation](http://moovatom.com/support/v2/api.html).
 
@@ -112,17 +112,17 @@ end
 
 me.get_details
 
-if me.response.code == 200 do
+if me.response["uuid"] == 'j9i8h7g6f5e4d3c2b1a'
   video = Video.find(params[:id])
-  video.update_attributes(JSON.parse(me.response.body))
+  video.update_attributes(me.response)
 else
   "...gracefully fail or raise an exception here..."
 end
 ```
 
-A details request will POST the uuid, username and userkey instance variables from your MoovEngine object using the `build_request()` and `send_request()` methods. If successful the body of the Moovatom response will contain the details of the video identified by the uuid set in your MoovEngine object.
+A details request will POST the uuid, username and userkey instance variables from your MoovEngine object using the `send_request()` method. If successful `@response` will contain either a JSON or XML formatted object (depending on the value of `@format`) ready to be queried and used.
 
-*Successful get_details() Response:*
+*Successful get_details() JSON Response:*
 
 ```
 {
@@ -196,11 +196,10 @@ A details request will POST the uuid, username and userkey instance variables fr
 }
 ```
 
-Because the Net::HTTP::Response object is stored in the `@response` instance variable after every call you are able to make decisions in your code based on the specific response received from Moovatom. In the example above we only find and update a specific video if the status code from Moovatom is 200 (or 'OK'). This code is just an example - it hasn't been tested in a Rails or Rack app.
 
 ## Status
 
-Sometimes you don't know if a large video you uploaded has finished encoding and you can't get its details until it's complete. `get_status()` allows you to query a video to find out if it's still processing or not.
+Sometimes you don't know if a large video you uploaded has finished encoding and you can't get its details until it's complete. `get_status()` allows you to query a video to find out if it's still processing.
 
 ```ruby
 me = MoovAtom::MoovEngine.new do |me|
@@ -211,19 +210,19 @@ end
 
 me.get_status
 
-if me.response.code == 200 do
-  json_res = JSON.parse(me.response.body)
+unless me.response["processing"]
+  me.get_details
   
-  unless json_res['processing']
+  if me.response["uuid"] == 'j9i8h7g6f5e4d3c2b1a'
     video = Video.find(params[:id])
-    video.update_attributes(json_res)
+    video.update_attributes(me.response)
+  else
+    "...gracefully fail or raise an exception here..."
   end
-else
-  "...gracefully fail or raise an exception here..."
 end
 ```
 
-A status request will POST the uuid, username and userkey instance variables from your MoovEngine object using the `build_request()` and `send_request()` methods. The body of the Moovatom response will contain either a success or error response:
+A status request will POST the uuid, username and userkey instance variables from your MoovEngine object using the `send_request()` method. The `@response` variable will contain either a success or error response:
 
 *Status Success Response:*
 
@@ -247,8 +246,6 @@ A status request will POST the uuid, username and userkey instance variables fro
 }
 ```
 
-The example code above could potentially be the beginning of a controller that is responsible for showing videos. It can't display the details of a video that hasn't finished encoding so it uses `get_status()` to update the attributes of a video and then later on it can send a collection of those completed videos to a view. Again, this code is just an example - it hasn't been tested in a Rails or Rack app.
-
 ## Encode
 
 You can start a new encoding on the Moovatom servers through the `encode()` method.
@@ -264,7 +261,7 @@ end
 me.encode
 ```
 
-An encode request will POST the username, userkey, content_type, title, blurb, sourcefile and callbackurl instance variables from your MoovEngine object using the `build_request()` and `send_request()` methods. The body of the Moovatom response will contain the uuid assigned by Moovatom's servers to this new video as well as a message stating your job was started successfully:
+An encode request will POST the username, userkey, content_type, title, blurb, sourcefile and callbackurl instance variables from your MoovEngine object using the `send_request()` method. The body of the Moovatom response will contain the uuid assigned by Moovatom's servers to this new video as well as a message stating your job was started successfully:
 
 *Encode Started Response:*
 
@@ -275,7 +272,7 @@ An encode request will POST the username, userkey, content_type, title, blurb, s
 }
 ```
 
-The encode RESTful action implemented on Moovatom's servers differs slightly from the other 3 RESTful actions. Once the encoding is complete Moovatom's servers will send a response to the call back URL you set in the `@callbackurl` instance variable. Your app should define a controller (or url handler if it's a [Sinatra](http://www.sinatrarb.com/) app) that will process these callbacks to save/update the video's details in your database. The body of the callback sent by Moovatom looks exactly like the response from a details request.
+After a successful response the `@uuid` variable of your MoovEngine object will be set to the uuid assigned by Moovatom. The encode RESTful action implemented on Moovatom's servers differs slightly from the other 3 RESTful actions. Once the encoding is complete Moovatom's servers will send a response to the call back URL you set in the `@callbackurl` instance variable. Your app should define a controller (or url handler if it's a [Sinatra](http://www.sinatrarb.com/) app) that will process these callbacks to save/update the video's details in your database. The body of the callback sent by Moovatom looks exactly like the response from a details request.
 
 Additionally, the video you are uploading to Moovatom should be in a publicly accessibly location. Moovatom will attempt to transfer that video from the url you define in the `@sourcefile` instance variable. The ability to upload a video directly is planned for a future version of the API and this gem.
 
@@ -283,7 +280,7 @@ For more specific information about the Moovatom API please see the [documentati
 
 ## Cancel
 
-If you decide, for whatever reason, that you no longer need or want a specific video on Moovatom you can cancel its encoding anytime __before it finishes__ using the `cancel()` method. A cancel request will POST the uuid, username and userkey instance variables from your MoovEngine object using the `build_request()` and `send_request()` methods. The body of the Moovatom response will contain a message telling you whether or not you successfully cancelled your video:
+If you decide, for whatever reason, that you no longer need or want a specific video on Moovatom you can cancel its encoding anytime __before it finishes__ using the `cancel()` method. A cancel request will POST the uuid, username and userkey instance variables from your MoovEngine object using the `send_request()` method. The body of the Moovatom response will contain a message telling you whether or not you successfully cancelled your video:
 
 ```ruby
 me = MoovAtom::MoovEngine.new do |me|
@@ -294,12 +291,8 @@ end
 
 me.get_status
 
-if me.response.code == 200 do
-  json_res = JSON.parse(me.response.body)
-  
-  if json_res['processing']
-    me.cancel
-  end
+if me.resposne['processing']
+  me.cancel
 else
   "...gracefully fail or raise an exception here..."
 end
@@ -320,7 +313,7 @@ end
 
 This gem uses [Minitest](https://github.com/seattlerb/minitest), [Turn](https://github.com/TwP/turn) and [Fakeweb](https://github.com/chrisk/fakeweb) to implement specs for each of the above four request methods, pretty colorized output and for mocking up a connection to the API.
 
-The entire test suite is under the spec directory. The `spec_helper.rb` file contains the common testing code and gets required by each `*_spec.rb` file. There is one spec file (`init_spec.rb`) that tests all of the expected functionality related to initializing a new MoovEngine object. Each of the 4 action methods also has a single spec file dedicated to testing its expected functionality. All API requests are mocked through [Fakeweb](https://github.com/chrisk/fakeweb) and the responses come from the files in the fixtures directory.
+The entire test suite is under the spec directory. The `spec_helper.rb` file contains the common testing code and gets required by each `*_spec.rb` file. There is one spec file (`init_spec.rb`) that tests the expected functionality related to initializing a new MoovEngine object. Each of the 4 action methods also has a single spec file dedicated to testing its expected functionality. All API requests are mocked through [Fakeweb](https://github.com/chrisk/fakeweb) and the responses come from the files in the fixtures directory.
 
 The Rakefile's default task is 'minitest', which will load and execute all the `*_spec.rb` files in the spec directory. So a simple call to `rake` on the command line from the project's root directory will run the entire test suite.
 
