@@ -115,6 +115,8 @@ module MoovAtom
       send_request
     end #-- cancel method
     
+    private
+
     ##
     # The send_request() method is responsible for POSTing the values stored in
     # your object's instance variables to Moovatom. The response from Moovatom
@@ -155,8 +157,6 @@ module MoovAtom
         end
       end
     end #-- send_request method
-
-    private
 
     ##
     # Custom to_s method for pretty printing in the console
