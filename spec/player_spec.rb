@@ -3,7 +3,7 @@ require "spec_helper"
 # this file contains all the tests for editing the attributes of the video
 # player on Moovatom's servers
 
-describe MoovAtom::MoovEngine "Edit Player Request Unit Tests" do
+describe MoovAtom::MoovEngine, "Edit Player Request Unit Tests" do
 
   before do
 
