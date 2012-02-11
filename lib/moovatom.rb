@@ -11,7 +11,7 @@
 # License:: MIT
 
 #-- required gems/libraries
-%w[net/http uri rexml/document json].each { |lib| require lib }
+%w[net/http uri rexml/document ostruct json].each { |lib| require lib }
 
 #-- wrap the whole library in a module to enforce namespace
 module MoovAtom
@@ -20,7 +20,7 @@ module MoovAtom
   class MoovEngine
     attr_reader   :response, :action
     attr_accessor :uuid, :username, :userkey, :content_type, :title, :blurb,
-                  :sourcefile, :callbackurl, :format
+                  :sourcefile, :callbackurl, :format, :player
     
     ##
     # The initializer populates the class' instance variables to hold all the
@@ -65,8 +65,9 @@ module MoovAtom
     # perform. @format allows you to get xml or json in your responses, it's
     # set to json by default. @content_type will default to 'video'.
     
-    def initialize(attrs={}, &block)
-      attrs.each {|k,v| instance_variable_set "@#{k}", v}
+    def initialize(vattrs={}, pattrs={}, &block)
+      @player = OpenStruct.new pattrs
+      vattrs.each {|k,v| instance_variable_set "@#{k}", v}
       yield self if block_given?
       @content_type = 'video' if @content_type.nil?
       @format = 'json' if @format.nil?
