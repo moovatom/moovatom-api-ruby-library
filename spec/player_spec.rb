@@ -26,5 +26,9 @@ describe MoovAtom::MoovEngine "Edit Player Request Unit Tests" do
     # enable all real requests after testing
     FakeWeb.allow_net_connect = true
   end
+
+  describe "API Requests" do
+    
+  end
   
 end
