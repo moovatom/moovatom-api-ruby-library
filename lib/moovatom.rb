@@ -28,42 +28,19 @@ module MoovAtom
     #
     # There are three ways to instantiate a new MoovEngine object:
     #
-    # 1.) Create a new blank object and set each variable using the traditional
-    # 'dot' notation:
+    # 1. Create a blank object and set each variable using 'dot' notation
+    # 2. Supply video and/or player attributes in hashes
+    # 3. Use a block to set attributes
     #
-    #   me = MoovAtom::MoovEngine.new
-    #   me.uuid = '123'
-    #   me.username = 'jsmith'
-    #   etc...
-    # 
-    # 2.) Supply a hash of variables as an argument:
+    # See the README for specific examples
     #
-    #   me = MoovAtom::MoovEngine.new(uuid: '123', username: 'jsmith', etc...)
-    # 
-    # 3.) Use a block to set variables. The initialize method yields _self_ to
-    # the block given:
-    #
-    #   me = MoovAtom::MoovEngine.new do |me|
-    #     me.uuid = '123'
-    #     me.username = 'jsmith'
-    #     etc...
-    #   end
-    #
-    # _self_ is yielded to the block after the hash argument has been processed
-    # so you can create a new object using a combination of hash and block:
-    #
-    #   me = MoovAtom::MoovEngine.new(uuid: '123') do |me|
-    #     me.username = 'jsmith'
-    #     me.userkey = '987654321'
-    #     etc...
-    #   end
-    #
-    # All variables with the exception of @response and @action are writable.
-    # @response is readable because it contains the response from MoovAtom's
-    # servers (xml or json). @action gets set in each of the request methods
-    # below to correctly correspond with the actions you're asking MoovAtom to
-    # perform. @format allows you to get xml or json in your responses, it's
-    # set to json by default. @content_type will default to 'video'.
+    # @player is a struct (OpenStruct) that holds all the attributes for your
+    # video player. All variables with the exception of @response and @action
+    # are writable. @response is readable because it contains the response from
+    # MoovAtom's servers. @action gets set in each of the request methods below
+    # to correctly correspond with the actions you're asking MoovAtom to
+    # perform. @format allows you to get xml or json in your responses, it's set
+    # to json by default. @content_type will default to 'video'.
     
     def initialize(vattrs={}, pattrs={}, &block)
       @player = OpenStruct.new pattrs
@@ -75,35 +52,14 @@ module MoovAtom
     
     ##
     # The get_details() method is responsible for communicating the details
-    # about a video that has completed encoding on Moovatom's servers. It is
-    # capable of accepting the same types and combinations of arguments as the
-    # initialize method. You can pass a hash of attributes and/or supply a
-    # block to update the internal state of the MoovEngine object prior to
-    # requesting the details of an existing video. This method sets the
-    # instance variable @action to 'detail' for you.
+    # about a video that has completed encoding on Moovatom's servers. You can
+    # pass a hash of attributes and/or supply a block to update the internal
+    # state of the MoovEngine object prior to requesting the details of an
+    # existing video. This method sets the instance variable @action to 'detail'
+    # for you. It uses the send_request() method to assign the response from the
+    # Moovatom servers to the @response instance variable.
     #
-    # It uses the send_request() method to assign the response from the Moovatom
-    # servers to the @response instance variable. The return value will be the
-    # "raw" Net::HTTP::Response object from Moovatom. This means you have access
-    # to all the specific response details corresponding to the most recent
-    # request available through @response.
-    #
-    # This allows you to check for specific attributes of the response before
-    # using the content returned:
-    #
-    #   me = MoovAtom::MoovEngine.new do |me|
-    #     me.uuid = "uuid"
-    #     me.username = "username"
-    #     me.userkey = "userkey"
-    #   end
-    #
-    #   me.get_details
-    #
-    #   if me.response.code == 200
-    #     "...do something with me.response.body..."
-    #   else
-    #     "EPIC FAIL"
-    #   end
+    # See README for specific examples
 
     def get_details(attrs={}, &block)
       @action = 'detail'
@@ -199,6 +155,8 @@ module MoovAtom
         end
       end
     end #-- send_request method
+
+    private
 
     ##
     # Custom to_s method for pretty printing in the console
