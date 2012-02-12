@@ -33,7 +33,7 @@ The entire library is wrapped in a module named MoovAtom. Inside that module is 
 11. `@action`
 12. `@response`
 
-The last 2 are readable only. `@response` will always contain the last response received from the Moovatom servers and `@action` will be set by each of the action methods explained below. `@player` is a struct object (technically an OpenStruct) that provides access to the player attributes for your video. The remaining 9 instance variables are writeable and correspond to the attributes of the video you want to control as well as your specific Moovatom account credentials. These attributes can be set in a number of ways depending upon the needs of your specific application.
+The last 2 are readable only. `@response` will always contain the last response received from the Moovatom servers and `@action` will be set by each of the action methods explained below. `@player` is a struct object (technically an OpenStruct) that provides access to the player attributes for your video. The remaining nine instance variables are writeable and correspond to the attributes of the video you want to control as well as your specific Moovatom account credentials. These attributes can be set in a number of ways depending upon the needs of your specific application.
 
 Instantiating a new (empty) object to communicate with the MoovAtom API is as simple as:
 
@@ -61,13 +61,13 @@ me3 = MoovEngine.new
 etc...
 ```
 
-The object created in the code above isn't very useful though. A MoovEngine object created without any arguments will, however, receive a few default values. `@content_type` will be initialized with a value of 'video', `@format` will be set to 'json' and `@player` will be initialized as an empty struct if no argument or block parameters are provided. The remaining 9 instance variables need to be set with the credentials for your Moovatom account and the specifics about the video you wish to control. Aside from creating an empty object, as we did above, I've tried to include as much flexibility as I could when it comes to creating a new MoovEngine object. You can pass one or two hashes to the initialize method containing the values you wish to be set for either player or video attributes. The first hash will be used to setup video attributes and your Moovatom account credentials. The second hash is used to initialize an OpenStruct object of player attributes.
+The object created in the code above isn't very useful though. A MoovEngine object created without any arguments will, however, receive a few default values. `@content_type` will be initialized with a value of 'video', `@format` will be set to 'json' and `@player` will be initialized as an empty struct if no argument or block parameters are provided. The remaining nine instance variables need to be set with the credentials for your Moovatom account and the specifics about the video you wish to control. Aside from creating an empty object, as we did above, I've tried to include as much flexibility as I could when it comes to creating a new MoovEngine object. You can pass one or two hashes to the initialize method containing the values you wish to be set for either player or video attributes. The first hash will be used to setup video attributes and your Moovatom account credentials. The second hash is used to initialize an OpenStruct object of player attributes.
 
 ```ruby
-// You can pass literal hashes:
+You can pass literal hashes:
 me = MoovAtom::MoovEngine.new({uuid: 'j9i8h7g6f5e4d3c2b1a'}, {height: '480'})
 
-// But it may be more readable to create the hashes first and then pass them:
+But it may be more readable to create the hashes first and then pass them:
 vattrs = {uuid: 'j9i8h7g6f5e4d3c2b1a', username: 'USERNAME', etc...}
 pattrs = {width: "720", height: "480", etc...}
 me = MoovAtom::MoovEngine.new(vattrs, pattrs)
@@ -287,7 +287,7 @@ An encode request will POST the username, userkey, content_type, title, blurb, s
 }
 ```
 
-After a successful response the `@uuid` variable of your MoovEngine object will be set to the uuid assigned by Moovatom. The encode action implemented on Moovatom's servers differs slightly from the other three actions. Once the encoding is complete Moovatom's servers will send a response to the call back URL you set in the `@callbackurl` instance variable. Your app should define a controller (or url handler if it's a [Sinatra](http://www.sinatrarb.com/) app) that will process these callbacks to save/update the video's details in your database. The body of the callback sent by Moovatom looks exactly like the response from a `get_details()` request.
+After a successful response the `@uuid` variable of your MoovEngine object will be set to the uuid assigned by Moovatom. The encode action implemented on Moovatom's servers differs slightly from the other four actions. Once the encoding is complete Moovatom's servers will send a response to the call back URL you set in the `@callbackurl` instance variable. Your app should define a controller (or url handler if it's a [Sinatra](http://www.sinatrarb.com/) app) that will process these callbacks to save/update the video's details in your database. The body of the callback sent by Moovatom looks exactly like the response from a `get_details()` request.
 
 Additionally, the video you are uploading to Moovatom must be in a publicly accessibly location. Moovatom will attempt to transfer that video from the url you define in the `@sourcefile` instance variable. The ability to upload a video directly is planned for a future version of the API and this gem.
 
@@ -350,16 +350,15 @@ time_color: #01DAFF
 The `edit_player()` method accepts the same hash/block argument syntax as the first four action methods, however, it takes the hash you pass and merges those attributes into any previous ones supplied in the second hash passed to the initialize method. Since the `@player` instance variable is just an OpenStruct object you can set any of the attributes above manually or through a block as well.
 
 ```ruby
-Variables can be set with a hash or a block or both:
-attrs = {width: "800", height: "500"}
-me.edit_player(attrs) do |me|
-  me.player.time_color = #12EBGG
-end
-
+Variables can be set manually, with a hash or a block or both:
 
 me.player.watermark = "http://www.example.com/path/to/watermark.png"
 me.player.watermark_url = "http://www.example.com"
 me.player.show_watermark = true
+
+me.edit_player(width: "800", height: "500") do |me|
+  me.player.time_color = "#12EBGG"
+end
 ```
 
 You can always add an attribute to your player struct by calling into it through the player instance variable:
@@ -378,7 +377,7 @@ me.player.button_color = "#889AA4"
 me.player.time_color = "#01DAFF"
 ```
 
-Since `@player` is implemented an an OpenStruct object it will create the attributes dynamically as you need them. This way only the attributes you which to alter will be sent in your requests.
+Since `@player` is implemented an an OpenStruct object it will create the attributes dynamically as you need them. This way only the attributes you wish to alter will be sent in your requests.
 
 For more specific information about the Moovatom API please see the [documentation](http://moovatom.com/support/v2/api.html).
 
@@ -386,9 +385,9 @@ For more specific information about the Moovatom API please see the [documentati
 
 Development of this gem was done on Ruby 1.9.2-p290. There should be no problems on 1.9.3. I haven't tried it on Ruby 1.8.7, but you shouldn't be using 1.8.7 anyways.  :-)
 
-This gem uses [Minitest](https://github.com/seattlerb/minitest), [Turn](https://github.com/TwP/turn) and [Fakeweb](https://github.com/chrisk/fakeweb) to implement specs for each of the above four request methods, pretty colorized output and for mocking up a connection to the API.
+This gem uses [Minitest](https://github.com/seattlerb/minitest), [Turn](https://github.com/TwP/turn) and [Fakeweb](https://github.com/chrisk/fakeweb) to implement specs for each of the above request methods, pretty colorized output and for mocking up a connection to the API.
 
-The entire test suite is under the spec directory. The `spec_helper.rb` file contains the common testing code and gets required by each `*_spec.rb` file. There is one spec file (`init_spec.rb`) that tests the expected functionality related to initializing a new MoovEngine object. Each of the 4 action methods also has a single spec file dedicated to testing its expected functionality. All API requests are mocked through [Fakeweb](https://github.com/chrisk/fakeweb) and the responses come from the files in the fixtures directory.
+The entire test suite is under the spec directory. The `spec_helper.rb` file contains the common testing code and gets required by each `*_spec.rb` file. There is one spec file (`init_spec.rb`) that tests the expected functionality related to initializing a new MoovEngine object. Each of the five action methods also has a single spec file dedicated to testing its expected functionality. All API requests are mocked through [Fakeweb](https://github.com/chrisk/fakeweb) and the responses come from the files in the fixtures directory.
 
 The Rakefile's default task is 'minitest', which will load and execute all the `*_spec.rb` files in the spec directory. So a simple call to `rake` on the command line from the project's root directory will run the entire test suite.
 
@@ -398,4 +397,4 @@ This is the first Ruby project in which I started from a TDD/BDD design perspect
 
 [MoovAtom](http://moovatom.com/) is an online video conversion and streaming service. The service insulates your videos from competitor's ads or links to inappropriate content. It offers customizable players that support hot linkable watermarks in addition to stream paths to your own player so you can control your videos, and your brand, on your own terms. Streaming is supported to all Apple mobile devices as well as most Android and Blackberry platforms. A unique QR Code is generated for each video for use in advertisements, allowing your viewers to simply "scan and play" your content. Advanced analytics and metrics provide valuable incite into how your viewers are watching your videos. The MoovAtom servers support both FTP access and direct uploads so huge file sizes are easy to handle. MoovAtom makes it easy to protect your copyrights, the streaming servers provide unparalleled protection over other services using progressive downloads to a user's browser cache.
 
-For more specific information about the Moovatom API please see the [documentation](http://moovatom.com/support/v2/api.html).
+For more specific information about the Moovatom please see their [home page](http://moovatom.com/).
