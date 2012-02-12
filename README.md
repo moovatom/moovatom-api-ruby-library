@@ -64,10 +64,10 @@ etc...
 The object created in the code above isn't very useful though. A MoovEngine object created without any arguments will, however, receive a few default values. `@content_type` will be initialized with a value of 'video', `@format` will be set to 'json' and `@player` will be initialized as an empty struct if no argument or block parameters are provided. The remaining 9 instance variables need to be set with the credentials for your Moovatom account and the specifics about the video you wish to control. Aside from creating an empty object, as we did above, I've tried to include as much flexibility as I could when it comes to creating a new MoovEngine object. You can pass one or two hashes to the initialize method containing the values you wish to be set for either player or video attributes. The first hash will be used to setup video attributes and your Moovatom account credentials. The second hash is used to initialize an OpenStruct object of player attributes.
 
 ```ruby
-You can pass literal hashes:
+// You can pass literal hashes:
 me = MoovAtom::MoovEngine.new({uuid: 'j9i8h7g6f5e4d3c2b1a'}, {height: '480'})
 
-But it may be more readable to create the hashes first and then pass them:
+// But it may be more readable to create the hashes first and then pass them:
 vattrs = {uuid: 'j9i8h7g6f5e4d3c2b1a', username: 'USERNAME', etc...}
 pattrs = {width: "720", height: "480", etc...}
 me = MoovAtom::MoovEngine.new(vattrs, pattrs)
