@@ -52,48 +52,24 @@ describe MoovAtom::MoovEngine, "Encode Request Unit Tests" do
     me.encode @vars2
 
     # the instance 'me' should now contain the values from the @vars2 hash
-    me.uuid.must_equal @vars1[:uuid]
-    me.username.must_equal @vars2[:username]
-    me.userkey.must_equal @vars2[:userkey]
-    me.title.must_equal @vars2[:title]
-    me.blurb.must_equal @vars2[:blurb]
-    me.sourcefile.must_equal @vars2[:sourcefile]
-    me.callbackurl.must_equal @vars2[:callbackurl]
+    @vars2.each {|k,v| me.instance_variable_get("@#{k}").must_equal v}
   end
 
   it "accepts a block to update attributes" do
 
     # create a new MoovEngine object with a block using the values from @vars1
     me = MoovAtom::MoovEngine.new do |me|
-      me.uuid = @vars1[:uuid]
-      me.username = @vars1[:username]
-      me.userkey = @vars1[:userkey]
-      me.title = @vars1[:title]
-      me.blurb = @vars1[:blurb]
-      me.sourcefile = @vars1[:sourcefile]
-      me.callbackurl = @vars1[:callbackurl]
+      @vars1.each {|k,v| me.instance_variable_set "@#{k}", v}
     end
 
     # call encode() passing a block that sets instance variables to the
     # values in the @vars2 hash
     me.encode do |me|
-      me.uuid = @vars2[:uuid]
-      me.username = @vars2[:username]
-      me.userkey = @vars2[:userkey]
-      me.title = @vars2[:title]
-      me.blurb = @vars2[:blurb]
-      me.sourcefile = @vars2[:sourcefile]
-      me.callbackurl = @vars2[:callbackurl]
+      @vars2.each {|k,v| me.instance_variable_set "@#{k}", v}
     end
 
     # the instance 'me' should now contain the values from the @vars2 hash
-    me.uuid.must_equal @vars1[:uuid]
-    me.username.must_equal @vars2[:username]
-    me.userkey.must_equal @vars2[:userkey]
-    me.title.must_equal @vars2[:title]
-    me.blurb.must_equal @vars2[:blurb]
-    me.sourcefile.must_equal @vars2[:sourcefile]
-    me.callbackurl.must_equal @vars2[:callbackurl]
+    @vars2.each {|k,v| me.instance_variable_get("@#{k}").must_equal v}
   end
 
   it "sets the action attribute to encode" do
@@ -104,7 +80,7 @@ describe MoovAtom::MoovEngine, "Encode Request Unit Tests" do
     # call the encode() method
     me.encode
 
-    # after calling encode() the @action should be 'encode'
+    # after calling encode() @action should be 'encode'
     me.action.must_equal 'encode'
   end
 
@@ -113,13 +89,13 @@ describe MoovAtom::MoovEngine, "Encode Request Unit Tests" do
 
     it "starts a new encoding using json" do
       @me.encode
-      @me.response["uuid"].must_equal @vars1[:uuid]
+      @me.response["uuid"].must_equal "321"
     end
 
     it "starts a new encoding using xml" do
       @me.format = 'xml'
       @me.encode
-      @me.response.root.elements["uuid"].text.must_equal @vars1[:uuid]
+      @me.response.root.elements["uuid"].text.must_equal "321"
     end
 
   end
