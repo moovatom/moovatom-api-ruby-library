@@ -118,6 +118,16 @@ module MoovAtom
       send_request
     end #-- cancel method
 
+    ##
+    # 
+
+    def edit_player(attrs={}, &block)
+      @action = 'edit_player'
+      @player = OpenStruct.new @player.instance_variable_get("@table").merge! attrs
+      yield self if block_given?
+      send_request
+    end #-- edit method
+
     private
 
     ##
