@@ -108,7 +108,7 @@ The MoovEngine class has five methods that have been designed to interact direct
 1. `get_details()` will return details about an encoded video
 2. `get_status()` will return the status of a video (e.g. - whether or not encoding has completed)
 3. `encode()` will start a new encoding job
-4. `cancel()` will cancel an _unfinished_ encoding job
+4. `cancel()` will cancel an __unfinished__ encoding job
 5. `edit_player()` changes the attributes of your video's online player
 
 Each of these methods are almost identical. They all accept a hash/block argument syntax similar to the initialize method. The main difference is that the action methods will accept only one hash and a block. This allows you to easily reuse a MoovEngine object to request information about different videos. The five action methods are able to be used and reused because they share a method that handles the heavy lifting when building and sending the request to Moovatom: `send_request()`. The `send_request()` method takes every instance variable (including player attributes) and creates a hash of the key/value attributes for your video. It then uses the `@format` and `@action` instance variables to build and POST the appropriate request to the Moovatom servers. If the response is successful it will parse it into either JSON or XML and store it in the `@response` instance variable. If the response is anything other than "200 OK" the raw Net::HTTPResponse object will be passed through and stored in `@response`. This allows you and your app to determine how best to handle the specific error response.
@@ -135,7 +135,7 @@ else
 end
 ```
 
-A details request will POST the _uuid_, _username_ and _userkey_ instance variables from your MoovEngine object using the `send_request()` method. If successful `@response` will contain either a JSON or XML formatted object (depending on the value of `@format`) ready to be queried and used. The example above shows how you can pass a hash, a block or both to the method. The remaining four action methods all accept the same style of argument passing.
+A details request will POST the __uuid__, __username__ and __userkey__ instance variables from your MoovEngine object using the `send_request()` method. If successful `@response` will contain either a JSON or XML formatted object (depending on the value of `@format`) ready to be queried and used. The example above shows how you can pass a hash, a block or both to the method. The remaining four action methods all accept the same style of argument passing.
 
 *Successful get_details() JSON Response:*
 
@@ -236,7 +236,7 @@ unless me.response["processing"]
 end
 ```
 
-A status request will POST the uuid, username and userkey instance variables from your MoovEngine object using the `send_request()` method. The `@response` variable will contain either a success or error response:
+A status request will POST the __uuid__, __username__ and __userkey__ instance variables from your MoovEngine object using the `send_request()` method. The `@response` variable will contain either a success or error response:
 
 *Status Success Response:*
 
@@ -276,7 +276,7 @@ end
 me.encode
 ```
 
-An encode request will POST the _username_, _userkey_, _content_type_, _title_, _blurb_, _sourcefile_ and _callbackurl_ instance variables from your MoovEngine object using the `send_request()` method. The body of the Moovatom response will contain the uuid assigned by Moovatom's servers to this new video as well as a message stating your job was started successfully:
+An encode request will POST the __username__, __userkey__, __content type__, __title__, __blurb__, __sourcefile__ and __callbackurl__ instance variables from your MoovEngine object using the `send_request()` method. The body of the Moovatom response will contain the uuid assigned by Moovatom's servers to this new video as well as a message stating whether or not your job was started successfully:
 
 *Encode Started Response:*
 
@@ -289,13 +289,13 @@ An encode request will POST the _username_, _userkey_, _content_type_, _title_, 
 
 After a successful response the `@uuid` variable of your MoovEngine object will be set to the uuid assigned by Moovatom. The encode action implemented on Moovatom's servers differs slightly from the other four actions. Once the encoding is complete Moovatom's servers will send a response to the call back URL you set in the `@callbackurl` instance variable. Your app should define a controller (or url handler if it's a [Sinatra](http://www.sinatrarb.com/) app) that will process these callbacks to save/update the video's details in your database. The body of the callback sent by Moovatom looks exactly like the response from a `get_details()` request.
 
-Additionally, the video you are uploading to Moovatom must be in a _publicly accessibly location_. Moovatom will attempt to transfer that video from the url you define in the `@sourcefile` instance variable. The ability to upload a video directly is planned for a future version of the API and this gem.
+Additionally, the video you are uploading to Moovatom must be in a __publicly accessibly location__. Moovatom will attempt to transfer that video from the url you define in the `@sourcefile` instance variable. The ability to upload a video directly is planned for a future version of the API and this gem.
 
 For more specific information about the Moovatom API please see the [documentation](http://moovatom.com/support/v2/api.html).
 
 ## Cancel
 
-If you decide, for whatever reason, that you no longer need or want a specific video on Moovatom you can cancel its encoding anytime __before it finishes__ using the `cancel()` method. A cancel request will POST the _uuid_, _username_ and _userkey_ instance variables from your MoovEngine object using the `send_request()` method. The body of the Moovatom response will contain a message telling you whether or not you successfully cancelled your video:
+If you decide, for whatever reason, that you no longer need or want a specific video on Moovatom you can cancel its encoding anytime __before it finishes__ using the `cancel()` method. A cancel request will POST the __uuid__, __username__ and __userkey__ instance variables from your MoovEngine object using the `send_request()` method. The body of the Moovatom response will contain a message telling you whether or not you successfully cancelled your video:
 
 ```ruby
 me = MoovAtom::MoovEngine.new(uuid: 'j9i8h7g6f5e4d3c2b1a') do |me|
