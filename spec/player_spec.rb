@@ -138,13 +138,13 @@ describe MoovAtom::MoovEngine, "Edit Player Request Unit Tests" do
 
   describe "API Requests" do
     
-    it "edits a videos player using json" do
+    it "edits a video's player using json" do
       @me.edit_player
       @me.response["uuid"].must_equal "123"
       @me.response["message"].must_equal "Player was edited successfully."
     end
 
-    it "edits a videos player using xml" do
+    it "edits a video's player using xml" do
       @me.format = 'xml'
       @me.edit_player
       @me.response.root.elements["uuid"].text.must_equal "123"
