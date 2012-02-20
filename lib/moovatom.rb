@@ -75,6 +75,8 @@ module MoovAtom
     # @action instance variable to 'status' for you. The main difference is
     # that you will receive either a success or error status response from
     # Moovatom's servers corresponding to the video of the uuid provided.
+    #
+    # See README for specific examples
 
     def get_status(attrs={}, &block)
       @action = 'status'
@@ -90,6 +92,8 @@ module MoovAtom
     # sets the @action instance variable to 'encode' for you. After a
     # successful response this method will set the @uuid instance variable to
     # the value returned from Moovatom.
+    #
+    # See README for specific examples
 
     def encode(attrs={}, &block)
       @action = 'encode'
@@ -110,6 +114,8 @@ module MoovAtom
     # by the Moovatom servers. It is almost identical to the get_details() and
     # get_status() methods. You can pass the same type/combination of arguments
     # and it also sets the @action instance variable to 'cancel' for you.
+    #
+    # See README for specific examples
 
     def cancel(attrs={}, &block)
       @action = 'cancel'
@@ -119,7 +125,13 @@ module MoovAtom
     end #-- cancel method
 
     ##
-    # 
+    # The edit_player() method allows you to change the player attributes for
+    # your videos on moovatom's servers. It accepts a hash of player attributes
+    # and/or a block to merge/update the @player instance variable created
+    # during initialization. It POSTs this (and all other instance variables) to
+    # moovatom through the send_request() method.
+    #
+    # See README for specific examples
 
     def edit_player(attrs={}, &block)
       @action = 'edit_player'
