@@ -105,10 +105,10 @@ The gem has been designed to be highly customizable. You are free to create a si
 
 The MoovEngine class has five methods that have been designed to interact directly with the RESTful API implemented by Moovatom's servers:
 
-1. `get_details()` will return details about a video that has __completed__ encoding
-2. `get_status()` will return the status of a video (whether or not encoding has completed)
+1. `get_details()` will return details about an encoded video
+2. `get_status()` will return the status of a video (e.g. - whether or not encoding has completed)
 3. `encode()` will start a new encoding job
-4. `cancel()` will cancel an unfinished encoding job
+4. `cancel()` will cancel an _unfinished_ encoding job
 5. `edit_player()` changes the attributes of your video's online player
 
 Each of these methods are almost identical. They all accept a hash/block argument syntax similar to the initialize method. The main difference is that the action methods will accept only one hash and a block. This allows you to easily reuse a MoovEngine object to request information about different videos. The five action methods are able to be used and reused because they share a method that handles the heavy lifting when building and sending the request to Moovatom: `send_request()`. The `send_request()` method takes every instance variable (including player attributes) and creates a hash of the key/value attributes for your video. It then uses the `@format` and `@action` instance variables to build and POST the appropriate request to the Moovatom servers. If the response is successful it will parse it into either JSON or XML and store it in the `@response` instance variable. If the response is anything other than "200 OK" the raw Net::HTTPResponse object will be passed through and stored in `@response`. This allows you and your app to determine how best to handle the specific error response.
@@ -135,7 +135,7 @@ else
 end
 ```
 
-A details request will POST the uuid, username and userkey instance variables from your MoovEngine object using the `send_request()` method. If successful `@response` will contain either a JSON or XML formatted object (depending on the value of `@format`) ready to be queried and used. The example above shows how you can pass a hash, a block or both to the method. The remaining four action methods all accept the same style of argument passing.
+A details request will POST the _uuid_, _username_ and _userkey_ instance variables from your MoovEngine object using the `send_request()` method. If successful `@response` will contain either a JSON or XML formatted object (depending on the value of `@format`) ready to be queried and used. The example above shows how you can pass a hash, a block or both to the method. The remaining four action methods all accept the same style of argument passing.
 
 *Successful get_details() JSON Response:*
 
@@ -214,7 +214,7 @@ A details request will POST the uuid, username and userkey instance variables fr
 
 ## Status
 
-Sometimes you don't know if a large video you've uploaded has finished encoding and you can't get its details until it's complete. `get_status()` allows you to query a video to find out if it's still processing.
+The `get_status()` method allows you to query a video that has begun encoding to check its progress.
 
 ```ruby
 me = MoovAtom::MoovEngine.new(uuid: 'j9i8h7g6f5e4d3c2b1a') do |me|
@@ -276,7 +276,7 @@ end
 me.encode
 ```
 
-An encode request will POST the username, userkey, content_type, title, blurb, sourcefile and callbackurl instance variables from your MoovEngine object using the `send_request()` method. The body of the Moovatom response will contain the uuid assigned by Moovatom's servers to this new video as well as a message stating your job was started successfully:
+An encode request will POST the _username_, _userkey_, _content_type_, _title_, _blurb_, _sourcefile_ and _callbackurl_ instance variables from your MoovEngine object using the `send_request()` method. The body of the Moovatom response will contain the uuid assigned by Moovatom's servers to this new video as well as a message stating your job was started successfully:
 
 *Encode Started Response:*
 
@@ -289,13 +289,13 @@ An encode request will POST the username, userkey, content_type, title, blurb, s
 
 After a successful response the `@uuid` variable of your MoovEngine object will be set to the uuid assigned by Moovatom. The encode action implemented on Moovatom's servers differs slightly from the other four actions. Once the encoding is complete Moovatom's servers will send a response to the call back URL you set in the `@callbackurl` instance variable. Your app should define a controller (or url handler if it's a [Sinatra](http://www.sinatrarb.com/) app) that will process these callbacks to save/update the video's details in your database. The body of the callback sent by Moovatom looks exactly like the response from a `get_details()` request.
 
-Additionally, the video you are uploading to Moovatom must be in a publicly accessibly location. Moovatom will attempt to transfer that video from the url you define in the `@sourcefile` instance variable. The ability to upload a video directly is planned for a future version of the API and this gem.
+Additionally, the video you are uploading to Moovatom must be in a _publicly accessibly location_. Moovatom will attempt to transfer that video from the url you define in the `@sourcefile` instance variable. The ability to upload a video directly is planned for a future version of the API and this gem.
 
 For more specific information about the Moovatom API please see the [documentation](http://moovatom.com/support/v2/api.html).
 
 ## Cancel
 
-If you decide, for whatever reason, that you no longer need or want a specific video on Moovatom you can cancel its encoding anytime __before it finishes__ using the `cancel()` method. A cancel request will POST the uuid, username and userkey instance variables from your MoovEngine object using the `send_request()` method. The body of the Moovatom response will contain a message telling you whether or not you successfully cancelled your video:
+If you decide, for whatever reason, that you no longer need or want a specific video on Moovatom you can cancel its encoding anytime __before it finishes__ using the `cancel()` method. A cancel request will POST the _uuid_, _username_ and _userkey_ instance variables from your MoovEngine object using the `send_request()` method. The body of the Moovatom response will contain a message telling you whether or not you successfully cancelled your video:
 
 ```ruby
 me = MoovAtom::MoovEngine.new(uuid: 'j9i8h7g6f5e4d3c2b1a') do |me|
@@ -325,7 +325,7 @@ end
 
 ## Edit Player
 
-The true power of Moovatom's streaming service becomes apparent only after you've placed a video on your site through their iframe code. But sometimes you need a little more control over how your video plays and what it looks like. This is where the `edit_player()` action method comes in. There are 17 attributes you can control through the API (shown below with their default values):
+The true power of Moovatom's streaming service becomes apparent only after you've placed a video on your site through their iframe code. But sometimes you need a little more control over how your video plays and what it looks like. This is where the `edit_player()` action method comes in. There are 17 attributes you can control through the API (shown here with their default values):
 
 ```
 height: 480
@@ -397,4 +397,4 @@ This is the first Ruby project in which I started from a TDD/BDD design perspect
 
 [MoovAtom](http://moovatom.com/) is an online video conversion and streaming service. The service insulates your videos from competitor's ads or links to inappropriate content. It offers customizable players that support hot linkable watermarks in addition to stream paths to your own player so you can control your videos, and your brand, on your own terms. Streaming is supported to all Apple mobile devices as well as most Android and Blackberry platforms. A unique QR Code is generated for each video for use in advertisements, allowing your viewers to simply "scan and play" your content. Advanced analytics and metrics provide valuable incite into how your viewers are watching your videos. The MoovAtom servers support both FTP access and direct uploads so huge file sizes are easy to handle. MoovAtom makes it easy to protect your copyrights, the streaming servers provide unparalleled protection over other services using progressive downloads to a user's browser cache.
 
-For more specific information about the Moovatom please see their [home page](http://moovatom.com/).
+For more specific information about the Moovatom service please see their [home page](http://moovatom.com/).
