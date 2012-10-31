@@ -383,7 +383,7 @@ For more specific information about the Moovatom API please see the [documentati
 
 # Testing
 
-Development of this gem was done on Ruby 1.9.2-p290. There should be no problems on 1.9.3. I haven't tried it on Ruby 1.8.7, but you shouldn't be using 1.8.7 anyways.  :-)
+Development of this gem was done on Ruby 1.9.2-p290, and has been tested up to 1.9.3-p286. I haven't tried it on Ruby 1.8.7, but you shouldn't be using 1.8.7 anyways.  :-)
 
 This gem uses [Minitest](https://github.com/seattlerb/minitest), [Turn](https://github.com/TwP/turn) and [Fakeweb](https://github.com/chrisk/fakeweb) to implement specs for each of the above request methods, pretty colorized output and for mocking up a connection to the API.
 
