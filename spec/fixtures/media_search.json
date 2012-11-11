@@ -1,0 +1,90 @@
+{
+    "result_count": "1",
+    "user": "USERNAME",
+    "results": [
+        {
+            "uuid": "123",
+            "title": "Video Title",
+            "summary": "A short description about the media.",
+            "duration": "45.347",
+            "media_type": "video",
+            "embed_code": "EMBED CODE IFRAME FOR SMART SWITCHING",
+            "iframe_target": "http://www.moovatom.com/media/embed/ID",
+            "original_download": "http://www.moovatom.com/media/download/orig/UUID",
+            "versions": [
+                {
+                    "name": "sample",
+                    "type": "video/mp4",
+                    "holdframe_download": "http://www.moovatom.com/PATH_TO_FILE",
+                    "thumbnail_download": "http://www.moovatom.com/PATH_TO_FILE",
+                    "holdframe_serve": "http://static.moovatom.com/PATH_TO_FILE",
+                    "thumbnail_serve": "http://static.moovatom.com/PATH_TO_FILE",
+                    "rtmp_stream": "rtmp://media.moovatom.com/PATH_TO_FILE",
+                    "http_stream": "http://media.moovatom.com:1935/PATH_TO_FILE",
+                    "rtsp_stream": "rtsp://media.moovatom.com:1935/PATH_TO_FILE",
+                    "download": "http://www.moovatom.com/PATH_TO_FILE"
+                },
+                {
+                    "name": "mobile",
+                    "type": "video/mp4",
+                    "holdframe_download": "http://www.moovatom.com/PATH_TO_FILE",
+                    "thumbnail_download": "http://www.moovatom.com/PATH_TO_FILE",
+                    "holdframe_serve": "http://static.moovatom.com/PATH_TO_FILE",
+                    "thumbnail_serve": "http://static.moovatom.com/PATH_TO_FILE",
+                    "rtmp_stream": "rtmp://media.moovatom.com/PATH_TO_FILE",
+                    "http_stream": "http://media.moovatom.com:1935/PATH_TO_FILE",
+                    "rtsp_stream": "rtsp://media.moovatom.com:1935/PATH_TO_FILE",
+                    "download": "http://www.moovatom.com/PATH_TO_FILE"
+                },
+                {
+                    "name": "mobile_large",
+                    "type": "video/mp4",
+                    "holdframe_download": "http://www.moovatom.com/PATH_TO_FILE",
+                    "thumbnail_download": "http://www.moovatom.com/PATH_TO_FILE",
+                    "holdframe_serve": "http://static.moovatom.com/PATH_TO_FILE",
+                    "thumbnail_serve": "http://static.moovatom.com/PATH_TO_FILE",
+                    "rtmp_stream": "rtmp://media.moovatom.com/PATH_TO_FILE",
+                    "http_stream": "http://media.moovatom.com:1935/PATH_TO_FILE",
+                    "rtsp_stream": "rtsp://media.moovatom.com:1935/PATH_TO_FILE",
+                    "download": "http://www.moovatom.com/PATH_TO_FILE"
+                },
+                {
+                    "name": "small",
+                    "type": "video/mp4",
+                    "holdframe_download": "http://www.moovatom.com/PATH_TO_FILE",
+                    "thumbnail_download": "http://www.moovatom.com/PATH_TO_FILE",
+                    "holdframe_serve": "http://static.moovatom.com/PATH_TO_FILE",
+                    "thumbnail_serve": "http://static.moovatom.com/PATH_TO_FILE",
+                    "rtmp_stream": "rtmp://media.moovatom.com/PATH_TO_FILE",
+                    "http_stream": "http://media.moovatom.com:1935/PATH_TO_FILE",
+                    "rtsp_stream": "rtsp://media.moovatom.com:1935/PATH_TO_FILE",
+                    "download": "http://www.moovatom.com/PATH_TO_FILE"
+                },
+                {
+                    "name": "medium",
+                    "type": "video/mp4",
+                    "holdframe_download": "http://www.moovatom.com/PATH_TO_FILE",
+                    "thumbnail_download": "http://www.moovatom.com/PATH_TO_FILE",
+                    "holdframe_serve": "http://static.moovatom.com/PATH_TO_FILE",
+                    "thumbnail_serve": "http://static.moovatom.com/PATH_TO_FILE",
+                    "rtmp_stream": "rtmp://media.moovatom.com/PATH_TO_FILE",
+                    "http_stream": "http://media.moovatom.com:1935/PATH_TO_FILE",
+                    "rtsp_stream": "rtsp://media.moovatom.com:1935/PATH_TO_FILE",
+                    "download": "http://www.moovatom.com/PATH_TO_FILE"
+                },
+                {
+                    "name": "large",
+                    "type": "video/mp4",
+                    "holdframe_download": "http://www.moovatom.com/PATH_TO_FILE",
+                    "thumbnail_download": "http://www.moovatom.com/PATH_TO_FILE",
+                    "holdframe_serve": "http://static.moovatom.com/PATH_TO_FILE",
+                    "thumbnail_serve": "http://static.moovatom.com/PATH_TO_FILE",
+                    "rtmp_stream": "rtmp://media.moovatom.com/PATH_TO_FILE",
+                    "http_stream": "http://media.moovatom.com:1935/PATH_TO_FILE",
+                    "rtsp_stream": "rtsp://media.moovatom.com:1935/PATH_TO_FILE",
+                    "download": "http://www.moovatom.com/PATH_TO_FILE"
+                }
+            ]
+        }
+    ]
+}
