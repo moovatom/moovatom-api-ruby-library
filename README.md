@@ -10,15 +10,16 @@ This gem provides access to the Moovatom online video processing and streaming s
 2. Getting the status of a current encoding
 3. Getting the details of a completed encoding
 4. Canceling an encoding job
-5. Editing the attributes of your video player
+5. Deleting an encoding job
+6. Editing the attributes of your video player
 
 Installing the gem is done through the usual `gem install moovatom` command, or by adding the following line to your project's Gemfile:
 
 ```
-gem "moovatom", "~> 0.2.0"
+gem "moovatom", "~> 0.3.0"
 ```
 
-The entire library is wrapped in a module named MoovAtom. Inside that module is a single class named MoovEngine. This class defines one constant, 12 instance variables and five action methods that interact with Moovatom's RESTful API. The constant `API_URL` defines the URL to which the JSON or XML requests must be POST'd. The 12 instance variables are:
+The entire library is wrapped in a module named MoovAtom. Inside that module is a single class named MoovEngine. This class defines one constant, 12 instance variables and six action methods that interact with Moovatom's RESTful API. The constant `API_URL` defines the URL to which the JSON or XML requests must be POST'd. The 12 instance variables are:
 
 1. `@uuid`
 2. `@username`
@@ -103,15 +104,16 @@ The gem has been designed to be highly customizable. You are free to create a si
 
 # Action Methods
 
-The MoovEngine class has five methods that have been designed to interact directly with the RESTful API implemented by Moovatom's servers:
+The MoovEngine class has six methods that have been designed to interact directly with the RESTful API implemented by Moovatom's servers:
 
 1. `get_details()` will return details about an encoded video
 2. `get_status()` will return the status of a video (e.g. - whether or not encoding has completed)
 3. `encode()` will start a new encoding job
 4. `cancel()` will cancel an __unfinished__ encoding job
-5. `edit_player()` changes the attributes of your video's online player
+5. `cancel()` will delete an __finished__ encoding job
+6. `edit_player()` changes the attributes of your video's online player
 
-Each of these methods are almost identical. They all accept a hash/block argument syntax similar to the initialize method. The main difference is that the action methods will accept only one hash and a block. This allows you to easily reuse a MoovEngine object to request information about different videos. The five action methods are able to be used and reused because they share a method that handles the heavy lifting when building and sending the request to Moovatom: `send_request()`. The `send_request()` method takes every instance variable (including player attributes) and creates a hash of the key/value attributes for your video. It then uses the `@format` and `@action` instance variables to build and POST the appropriate request to the Moovatom servers. If the response is successful it will parse it into either JSON or XML and store it in the `@response` instance variable. If the response is anything other than "200 OK" the raw Net::HTTPResponse object will be passed through and stored in `@response`. This allows you and your app to determine how best to handle the specific error response.
+Each of these methods are almost identical. They all accept a hash/block argument syntax similar to the initialize method. The main difference is that the action methods will accept only one hash and a block. This allows you to easily reuse a MoovEngine object to request information about different videos. The six action methods are able to be used and reused because they share a method that handles the heavy lifting when building and sending the request to Moovatom: `send_request()`. The `send_request()` method takes every instance variable (including player attributes) and creates a hash of the key/value attributes for your video. It then uses the `@format` and `@action` instance variables to build and POST the appropriate request to the Moovatom servers. If the response is successful it will parse it into either JSON or XML and store it in the `@response` instance variable. If the response is anything other than "200 OK" the raw Net::HTTPResponse object will be passed through and stored in `@response`. This allows you and your app to determine how best to handle the specific error response.
 
 For more specific information about the Moovatom API please see the [documentation](http://moovatom.com/support/v2/api.html).
 
@@ -135,7 +137,7 @@ else
 end
 ```
 
-A details request will POST the __uuid__, __username__ and __userkey__ instance variables from your MoovEngine object using the `send_request()` method. If successful `@response` will contain either a JSON or XML formatted object (depending on the value of `@format`) ready to be queried and used. The example above shows how you can pass a hash, a block or both to the method. The remaining four action methods all accept the same style of argument passing.
+A details request will POST the __uuid__, __username__ and __userkey__ instance variables from your MoovEngine object using the `send_request()` method. If successful `@response` will contain either a JSON or XML formatted object (depending on the value of `@format`) ready to be queried and used. The example above shows how you can pass a hash, a block or both to the method. The remaining five action methods all accept the same style of argument passing.
 
 *Successful get_details() JSON Response:*
 
@@ -210,7 +212,6 @@ A details request will POST the __uuid__, __username__ and __userkey__ instance 
     ]
 }
 ```
-
 
 ## Status
 
@@ -287,7 +288,7 @@ An encode request will POST the __username__, __userkey__, __content type__, __t
 }
 ```
 
-After a successful response the `@uuid` variable of your MoovEngine object will be set to the uuid assigned by Moovatom. The encode action implemented on Moovatom's servers differs slightly from the other four actions. Once the encoding is complete Moovatom's servers will send a response to the call back URL you set in the `@callbackurl` instance variable. Your app should define a controller (or url handler if it's a [Sinatra](http://www.sinatrarb.com/) app) that will process these callbacks to save/update the video's details in your database. The body of the callback sent by Moovatom looks exactly like the response from a `get_details()` request.
+After a successful response the `@uuid` variable of your MoovEngine object will be set to the uuid assigned by Moovatom. The encode action implemented on Moovatom's servers differs slightly from the other five actions. Once the encoding is complete Moovatom's servers will send a response to the call back URL you set in the `@callbackurl` instance variable. Your app should define a controller (or url handler if it's a [Sinatra](http://www.sinatrarb.com/) app) that will process these callbacks to save/update the video's details in your database. The body of the callback sent by Moovatom looks exactly like the response from a `get_details()` request.
 
 Additionally, the video you are uploading to Moovatom must be in a __publicly accessibly location__. Moovatom will attempt to transfer that video from the url you define in the `@sourcefile` instance variable. The ability to upload a video directly is planned for a future version of the API and this gem.
 
@@ -295,7 +296,7 @@ For more specific information about the Moovatom API please see the [documentati
 
 ## Cancel
 
-If you decide, for whatever reason, that you no longer need or want a specific video on Moovatom you can cancel its encoding anytime __before it finishes__ using the `cancel()` method. A cancel request will POST the __uuid__, __username__ and __userkey__ instance variables from your MoovEngine object using the `send_request()` method. The body of the Moovatom response will contain a message telling you whether or not you successfully cancelled your video:
+If you decide, for whatever reason, that you no longer need or want a specific video on Moovatom you can cancel its encoding anytime __before it finishes__ using the `cancel()` method. A cancel request will POST the __uuid__, __username__ and __userkey__ instance variables from your MoovEngine object using the `send_request()` method. The body of the Moovatom response will contain a message telling you whether or not you've successfully cancelled your video:
 
 ```ruby
 me = MoovAtom::MoovEngine.new(uuid: 'j9i8h7g6f5e4d3c2b1a') do |me|
@@ -321,7 +322,33 @@ end
 }
 ```
 
-*__NOTE:__ There is currently no way to delete a video from your Moovatom account that has completed encoding without manually logging in and deleting it yourself. The ability to delete through the API will be available in the future.*
+## Delete
+
+If you decide, for whatever reason, that you no longer need or want a specific video on Moovatom you can delete its encoding anytime after it finishes__ using the `delete()` method. A delete request will POST the __uuid__, __username__ and __userkey__ instance variables from your MoovEngine object using the `send_request()` method. The body of the Moovatom response will contain a message telling you whether or not you've successfully deleted your video:
+
+```ruby
+me = MoovAtom::MoovEngine.new(uuid: 'j9i8h7g6f5e4d3c2b1a') do |me|
+  me.username = 'USERNAME'
+  me.userkey = 'a1b2c3d4e5f6g7h8i9j'
+end
+
+me.get_status
+
+unless me.response['processing']
+  me.delete
+else
+  "...gracefully fail or raise an exception here..."
+end
+```
+
+*Example delete request response:*
+
+```
+{
+    "uuid": "UUID",
+    "message": "Your media was successfully deleted."
+}
+```
 
 ## Edit Player
 
@@ -347,11 +374,9 @@ button_over_color: #92B2BD
 time_color: #01DAFF
 ```
 
-The `edit_player()` method accepts the same hash/block argument syntax as the first four action methods, however, it takes the hash you pass and merges those attributes into any previous ones supplied in the second hash passed to the initialize method. Since the `@player` instance variable is just an OpenStruct object you can set any of the attributes above manually or through a block as well.
+The `edit_player()` method accepts the same hash/block argument syntax as the first five action methods, however, it takes the hash you pass and merges those attributes into any previous ones supplied in the second hash passed to the initialize method. Since the `@player` instance variable is just an OpenStruct object you can set any of the attributes above manually, in a hash or through a block.
 
 ```ruby
-Variables can be set manually, with a hash or a block or both:
-
 me.player.watermark = "http://www.example.com/path/to/watermark.png"
 me.player.watermark_url = "http://www.example.com"
 me.player.show_watermark = true
@@ -361,37 +386,21 @@ me.edit_player(width: "800", height: "500") do |me|
 end
 ```
 
-You can always add an attribute to your player struct by calling into it through the player instance variable:
-
-```ruby
-me = MoovAtom::MoovEngine.new
-me.player.height = "480"
-me.player.width = "720"
-me.player.auto_play = false
-me.player.sharing_enabled = true
-me.player.watermark_opacity = "0.8"
-me.player.background_color = "#000000"
-me.player.duration_color = "#FFFFFF"
-me.player.volume_color = "#000000"
-me.player.button_color = "#889AA4"
-me.player.time_color = "#01DAFF"
-```
-
 Since `@player` is implemented an an OpenStruct object it will create the attributes dynamically as you need them. This way only the attributes you wish to alter will be sent in your requests.
 
 For more specific information about the Moovatom API please see the [documentation](http://moovatom.com/support/v2/api.html).
 
 # Testing
 
-Development of this gem was done on Ruby 1.9.2-p290. There should be no problems on 1.9.3. I haven't tried it on Ruby 1.8.7, but you shouldn't be using 1.8.7 anyways.  :-)
+Development of this gem was done on Ruby 1.9.3-p286. I haven't tried it on Ruby 1.8.7, but you shouldn't be using 1.8.7 anyways.  :-)
 
 This gem uses [Minitest](https://github.com/seattlerb/minitest), [Turn](https://github.com/TwP/turn) and [Fakeweb](https://github.com/chrisk/fakeweb) to implement specs for each of the above request methods, pretty colorized output and for mocking up a connection to the API.
 
-The entire test suite is under the spec directory. The `spec_helper.rb` file contains the common testing code and gets required by each `*_spec.rb` file. There is one spec file (`init_spec.rb`) that tests the expected functionality related to initializing a new MoovEngine object. Each of the five action methods also has a single spec file dedicated to testing its expected functionality. All API requests are mocked through [Fakeweb](https://github.com/chrisk/fakeweb) and the responses come from the files in the fixtures directory.
+The entire test suite is under the spec directory. The `spec_helper.rb` file contains the common testing code and gets required by each `*_spec.rb` file. There is one spec file (`init_spec.rb`) that tests the expected functionality related to initializing a new MoovEngine object. Each of the six action methods also has a single spec file dedicated to testing its expected functionality. All API requests are mocked through [Fakeweb](https://github.com/chrisk/fakeweb) and the responses come from the files in the fixtures directory.
 
 The Rakefile's default task is 'minitest', which will load and execute all the `*_spec.rb` files in the spec directory. So a simple call to `rake` on the command line from the project's root directory will run the entire test suite.
 
-This is the first Ruby project in which I started from a TDD/BDD design perspective. If anyone has a problem with the tests or sees areas where I can improve please [open an issue](https://github.com/humanshell/moovatom/issues) here so it can be discussed and everyone can learn a little. I really enjoyed creating tests that helped drive the design of the code. I'm sure there are *PLENTY* of areas in which I can improve.
+This is the first Ruby project in which I started from a TDD/BDD design perspective. If anyone has a problem with the tests or sees areas where I can improve please [open an issue](https://github.com/humanshell/moovatom-ruby/issues) here so it can be discussed and everyone can learn a little. I really enjoyed creating tests that helped drive the design of the code. I'm sure there are *PLENTY* of areas in which I can improve.
 
 # Moovatom
 
