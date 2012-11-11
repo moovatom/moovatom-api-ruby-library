@@ -19,8 +19,8 @@ module MoovAtom
   
   class MoovEngine
     attr_reader   :response, :action
-    attr_accessor :uuid, :username, :userkey, :content_type, :title, :blurb,
-                  :sourcefile, :callbackurl, :format, :player
+    attr_accessor :uuid, :username, :userkey, :content_type, :search_term, :title,
+                  :blurb, :sourcefile, :callbackurl, :format, :player
     
     ##
     # The initializer populates the class' instance variables to hold all the
@@ -138,7 +138,37 @@ module MoovAtom
       @player.instance_variable_get("@table").merge! attrs
       yield self if block_given?
       send_request
-    end #-- edit method
+    end #-- edit_player method
+
+    ##
+    # The delete() method allows you to delete a video that's finished encoding
+    # on the Moovatom servers. It is almost identical to the get_details() and
+    # get_status() methods. You can pass the same type/combination of arguments
+    # and it also sets the @action instance variable to 'delete' for you.
+    #
+    # See README for specific examples
+
+    def delete(attrs={}, &block)
+      @action = 'delete'
+      attrs.each {|k,v| instance_variable_set "@#{k}", v}
+      yield self if block_given?
+      send_request
+    end #-- delete method
+
+    ##
+    # The media_search() method allows you to search for a video on the
+    # Moovatom servers. It is almost identical to the get_details() and
+    # get_status() methods. You can pass the same type/combination of arguments
+    # and it also sets the @action instance variable to 'media_search' for you.
+    #
+    # See README for specific examples
+
+    def media_search(attrs={}, &block)
+      @action = 'media_search'
+      attrs.each {|k,v| instance_variable_set "@#{k}", v}
+      yield self if block_given?
+      send_request
+    end #-- media_search method
 
     private
 
@@ -216,6 +246,7 @@ module MoovAtom
       puts "Blurb:        #{@blurb}"
       puts "Source File:  #{@sourcefile}"
       puts "Callback URL: #{@callbackurl}"
+      puts "Search Term:  #{@search_term}"
       puts "Action:       #{@action}"
       puts "Format:       #{@format}"
       puts "Response:     #{@response.class}"
