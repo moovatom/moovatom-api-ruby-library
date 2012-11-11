@@ -138,7 +138,7 @@ module MoovAtom
       @player.instance_variable_get("@table").merge! attrs
       yield self if block_given?
       send_request
-    end #-- edit method
+    end #-- edit_player method
 
     private
 
