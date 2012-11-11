@@ -140,6 +140,21 @@ module MoovAtom
       send_request
     end #-- edit_player method
 
+    ##
+    # The delete() method allows you to delete a video that's finished encoding
+    # on the Moovatom servers. It is almost identical to the get_details() and
+    # get_status() methods. You can pass the same type/combination of arguments
+    # and it also sets the @action instance variable to 'delete' for you.
+    #
+    # See README for specific examples
+
+    def delete(attrs={}, &block)
+      @action = 'delete'
+      attrs.each {|k,v| instance_variable_set "@#{k}", v}
+      yield self if block_given?
+      send_request
+    end #-- delete method
+
     private
 
     ##
