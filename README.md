@@ -67,12 +67,9 @@ etc...
 The object created in the code above isn't very useful though. A MoovEngine object created without any arguments will, however, receive a few default values. `@content_type` will be initialized with a value of 'video', `@format` will be set to 'json' and `@player` will be initialized as an empty struct if no argument or block parameters are provided. The remaining ten instance variables need to be set with the credentials for your Moovatom account and the specifics about the video you wish to control. Aside from creating an empty object, as we did above, I've tried to include as much flexibility as I could when it comes to creating a new MoovEngine object. You can pass one or two hashes to the initialize method containing the values you wish to be set for either player or video attributes. The first hash will be used to setup video attributes and your Moovatom account credentials. The second hash is used to initialize an OpenStruct object of player attributes.
 
 ```ruby
-You can pass literal hashes:
-me = MoovAtom::MoovEngine.new({uuid: 'j9i8h7g6f5e4d3c2b1a'}, {height: '480'})
-
-But it may be more readable to create the hashes first and then pass them:
 vattrs = {uuid: 'j9i8h7g6f5e4d3c2b1a', username: 'USERNAME', etc...}
 pattrs = {width: "720", height: "480", etc...}
+
 me = MoovAtom::MoovEngine.new(vattrs, pattrs)
 ```
 
@@ -140,17 +137,21 @@ else
 end
 ```
 
-A details request will POST the __uuid__, __username__ and __userkey__ instance variables from your MoovEngine object using the `send_request()` method. If successful `@response` will contain either a JSON or XML formatted object (depending on the value of `@format`) ready to be queried and used. The example above shows how you can pass a hash, a block or both to the method. The remaining six action methods all accept the same style of argument passing.
+A details request will POST the __uuid__, __username__ and __userkey__ instance variables from your MoovEngine object. If successful `@response` will contain either a JSON or XML formatted object (depending on the value of `@format`) ready to be queried and used. The example above shows how you can pass a hash, a block or both to the method. The remaining six action methods all accept the same style of argument passing.
 
 *Successful get_details() JSON Response:*
 
 ```
 {
     "uuid": "UUID",
+    "title": "Video Title",
+    "summary": "A short description about the media.",
+    "duration": "45.347",
     "media_type": "video",
     "embed_code": "EMBED CODE SMART SWITCHING FOR AUTOMATIC MOBILE AND WEB SUPPORT.",
     "iframe_target": "http://www.moovatom.com/media/embed/ID",
-    "original_download": "http://www.moovatom.com/media/download/orig/UUID",
+    "http_live_streaming_playlist": "http://media.moovatom.com:1935/PATH_TO_FILE",
+    "original_download": "http://static.moovatom.com/PATH_TO_FILE",
     "versions": [
         {
             "name": "mobile",
@@ -240,7 +241,7 @@ unless me.response["processing"]
 end
 ```
 
-A status request will POST the __uuid__, __username__ and __userkey__ instance variables from your MoovEngine object using the `send_request()` method. The `@response` variable will contain either a success or error response:
+A status request will POST the __uuid__, __username__ and __userkey__ instance variables from your MoovEngine object. The `@response` variable will contain either a success or error response:
 
 *Status Success Response:*
 
@@ -280,7 +281,7 @@ end
 me.encode
 ```
 
-An encode request will POST the __username__, __userkey__, __content type__, __title__, __blurb__, __sourcefile__ and __callbackurl__ instance variables from your MoovEngine object using the `send_request()` method. The body of the Moovatom response will contain the uuid assigned by Moovatom's servers to this new video as well as a message stating whether or not your job was started successfully:
+An encode request will POST the __username__, __userkey__, __content type__, __title__, __blurb__, __sourcefile__ and __callbackurl__ instance variables from your MoovEngine object. The body of the Moovatom response will contain the uuid assigned by Moovatom's servers to this new video as well as a message stating whether or not your job was started successfully:
 
 *Encode Started Response:*
 
@@ -299,7 +300,7 @@ For more specific information about the Moovatom API please see the [documentati
 
 ## Cancel
 
-If you decide, for whatever reason, that you no longer need or want a specific video on Moovatom you can cancel its encoding anytime __before it finishes__ using the `cancel()` method. A cancel request will POST the __uuid__, __username__ and __userkey__ instance variables from your MoovEngine object using the `send_request()` method. The body of the Moovatom response will contain a message telling you whether or not you've successfully cancelled your video:
+If you decide, for whatever reason, that you no longer need or want a specific video on Moovatom you can cancel its encoding anytime __before it finishes__ using the `cancel()` method. A cancel request will POST the __uuid__, __username__ and __userkey__ instance variables from your MoovEngine object. The body of the Moovatom response will contain a message telling you whether or not you've successfully cancelled your video:
 
 ```ruby
 me = MoovAtom::MoovEngine.new(uuid: 'j9i8h7g6f5e4d3c2b1a') do |me|
@@ -327,7 +328,7 @@ end
 
 ## Delete
 
-If you decide, for whatever reason, that you no longer need or want a specific video on Moovatom you can delete its encoding anytime __after it finishes__ using the `delete()` method. A delete request will POST the __uuid__, __username__ and __userkey__ instance variables from your MoovEngine object using the `send_request()` method. The body of the Moovatom response will contain a message telling you whether or not you've successfully deleted your video:
+If you decide, for whatever reason, that you no longer need or want a specific video on Moovatom you can delete its encoding anytime __after it finishes__ using the `delete()` method. A delete request will POST the __uuid__, __username__ and __userkey__ instance variables from your MoovEngine object. The body of the Moovatom response will contain a message telling you whether or not you've successfully deleted your video:
 
 ```ruby
 me = MoovAtom::MoovEngine.new(uuid: 'j9i8h7g6f5e4d3c2b1a') do |me|
@@ -393,12 +394,12 @@ Since `@player` is implemented an an OpenStruct object it will create the attrib
 
 ## Media Search
 
-The `media_search()` action method allows you to query the videos you've uploaded to and encoded on Moovatom's servers using search terms entered into the `@search_terms` instance variable. A media_search request will POST the __username__, __userkey__ and __search_terms__ instance variables from your MoovEngine object using the `send_request()` method. The body of the Moovatom response will be similar to a details request:
+The `media_search()` action method allows you to query the videos you've uploaded to and encoded on Moovatom's servers using search terms entered into the `@search_terms` instance variable. A media_search request will POST the __username__, __userkey__ and __search_term__ instance variables from your MoovEngine object. The body of the Moovatom response will be similar to a details request:
 
 ```ruby
 me = MoovAtom::MoovEngine.new(username: 'USERNAME') do |me|
   me.userkey = 'a1b2c3d4e5f6g7h8i9j'
-  me.search_terms = 'dolphin'
+  me.search_term = 'dolphin'
 end
 
 me.media_search
@@ -512,6 +513,14 @@ The entire test suite is under the spec directory. The `spec_helper.rb` file con
 The Rakefile's default task is 'minitest', which will load and execute all the `*_spec.rb` files in the spec directory. So a simple call to `rake` on the command line from the project's root directory will run the entire test suite.
 
 This is the first Ruby project in which I started from a TDD/BDD design perspective. If anyone has a problem with the tests or sees areas where I can improve please [open an issue](https://github.com/humanshell/moovatom-ruby/issues) here so it can be discussed and everyone can learn a little. I really enjoyed creating tests that helped drive the design of the code. I'm sure there are *PLENTY* of areas in which I can improve.
+
+# Changelog
+
+## v0.3.0
+
+* Added support for the delete action method
+* Added support for the media_search action method
+* Updated documentation
 
 # Moovatom
 
