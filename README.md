@@ -394,7 +394,7 @@ Since `@player` is implemented an an OpenStruct object it will create the attrib
 
 ## Media Search
 
-The `media_search()` action method allows you to query the videos you've uploaded to and encoded on Moovatom's servers using search terms entered into the `@search_terms` instance variable. A media_search request will POST the __username__, __userkey__ and __search_term__ instance variables from your MoovEngine object. The body of the Moovatom response will be similar to a details request:
+The `media_search()` action method allows you to query the videos you've uploaded to and encoded on Moovatom's servers using search terms entered into the `@search_term` instance variable. A media_search request will POST the __username__, __userkey__ and __search_term__ instance variables from your MoovEngine object. The body of the Moovatom response will be similar to a details request:
 
 ```ruby
 me = MoovAtom::MoovEngine.new(username: 'USERNAME') do |me|
