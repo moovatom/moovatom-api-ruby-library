@@ -1,4 +1,4 @@
-![Moovatom Logo](http://www.moovatom.com/static/img/site_images/moovatom_logo.png)
+*__NOTE:__ As of January 1, 2013 the Moovatom service is being re-branded and relaunched as [Everybit Media Services](http://dev.everybit.co). Version 2 of the Moovatom API will be the final version. Which means this gem is no longer under active development. Please see the new Ruby Gem [project](https://github.com/everybit/everybit-ruby) for the Everybit API for a lot of new features and functionality.*
 
 *__NOTE:__ As of version 0.2.0 this gem no longer supports v1 of the Moovatom API. That version has been deprecated. It is highly recommended that you move to the new v2 API as soon as possible.*
 
